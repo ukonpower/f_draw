@@ -1,6 +1,7 @@
 import * as GLP from 'glpower';
 import { setUniforms } from '~/ts/Scene/Renderer';
 import { shaderParse } from '~/ts/Scene/Renderer/ShaderParser';
+import { Entity } from '../Framework/Entity';
 
 export class Modeler {
 
@@ -150,7 +151,7 @@ export class Modeler {
 
 	}
 
-	public bakeEntity( entity: GLP.Entity ) {
+	public bakeEntity( entity: Entity ) {
 
 		const resultGeo = new GLP.Geometry();
 
@@ -158,7 +159,7 @@ export class Modeler {
 		const normalArray : number[] = [];
 		const indexArray: number[] = [];
 
-		const _ = ( e: GLP.Entity, matrix: GLP.Matrix ) => {
+		const _ = ( e: Entity, matrix: GLP.Matrix ) => {
 
 			let geo = e.getComponent<GLP.Geometry>( 'geometry' );
 

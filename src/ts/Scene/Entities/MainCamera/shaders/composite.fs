@@ -6,8 +6,6 @@ uniform sampler2D uBloomTexture[4];
 uniform vec3 cameraPosition;
 uniform float cameraNear;
 uniform float cameraFar;
-uniform float uVisible;
-uniform float uVignette;
 
 in vec2 vUv;
 
@@ -32,7 +30,7 @@ void main( void ) {
 	vec2 uv = vUv;
 	vec2 cuv = uv - 0.5;
 	float len = length(cuv);
-	float w = 0.04 + uVignette * 0.2;
+	float w = 0.04;
 
 	float d;
 	#pragma loop_start 8
@@ -50,8 +48,6 @@ void main( void ) {
 	#pragma loop_end
 
 	col *= smoothstep( 1.0, 0.4, len );
-
-	col.xyz *= uVisible;
 
 	outColor = vec4( col, 1.0 );
 

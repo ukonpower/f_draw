@@ -5,8 +5,9 @@ import { globalUniforms } from '~/ts/Globals';
 import ringsVert from './shaders/rings.vs';
 import ringsFrag from './shaders/rings.fs';
 import { hotGet, hotUpdate } from '~/ts/libs/glpower_local/Framework/Utils/Hot';
+import { Entity } from 'maxpower/Entity';
 
-export class Rings extends GLP.Entity {
+export class Rings extends Entity {
 
 	constructor() {
 

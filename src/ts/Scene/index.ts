@@ -1,10 +1,13 @@
 import * as GLP from 'glpower';
-import { Carpenter } from './Carpenter';
-import { blidge, gl, globalUniforms, power } from '../Globals';
+import * as MXP from 'maxpower';
+
+import { gl, globalUniforms, power } from '../Globals';
 
 import { MainCamera } from './Entities/MainCamera';
 import { Renderer } from './Renderer';
 import { createTextures } from './Textures';
+import { Phase1 } from './Entities/Phase/Phase1';
+import { Common } from './Entities/Phase/Common';
 
 type SceneUpdateParam = {
 	forceDraw: boolean
@@ -16,11 +19,9 @@ export class Scene extends GLP.EventEmitter {
 	public elapsedTime: number;
 	public deltaTime: number;
 
-	private root: GLP.Entity;
-	private camera: GLP.Entity;
+	private root: MXP.Entity;
+	private camera: MXP.Entity;
 	private renderer: Renderer;
-
-	private carpenter: Carpenter;
 
 	constructor() {
 
@@ -34,7 +35,7 @@ export class Scene extends GLP.EventEmitter {
 
 		// root
 
-		this.root = new GLP.Entity();
+		this.root = new MXP.Entity();
 
 		// camera
 
@@ -54,7 +55,7 @@ export class Scene extends GLP.EventEmitter {
 		forwardBuffer.setDepthTexture( gBuffer.depthTexture );
 		forwardBuffer.setTexture( [ deferredBuffer.textures[ 0 ] ] );
 
-		this.root.on( 'resize', ( event: GLP.EntityResizeEvent ) => {
+		this.root.on( 'resize', ( event: MXP.EntityResizeEvent ) => {
 
 			gBuffer.setSize( event.resolution );
 			deferredBuffer.setSize( event.resolution );
@@ -70,15 +71,12 @@ export class Scene extends GLP.EventEmitter {
 
 		createTextures();
 
-		// carpenter
+		// Wrold
 
-		this.carpenter = new Carpenter( this.root, this.camera );
+		this.root.add( new Common() );
 
-		this.carpenter.on( "loaded", () => {
-
-			this.emit( "loaded" );
-
-		} );
+		const phase = new Phase1();
+		this.root.add( phase );
 
 		// renderer
 
@@ -97,15 +95,8 @@ export class Scene extends GLP.EventEmitter {
 		globalUniforms.time.uTime.value = this.elapsedTime;
 		globalUniforms.time.uFractTime.value = this.elapsedTime;
 		globalUniforms.time.uTimeSeqPrev.value = globalUniforms.time.uTimeSeq.value;
-		globalUniforms.time.uTimeSeq.value = blidge.frame.current / 30;
 
-		if ( process.env.NODE_ENV != "development" ) {
-
-			blidge.setFrame( this.elapsedTime * 30 );
-
-		}
-
-		const event: GLP.EntityUpdateEvent = {
+		const event: MXP.EntityUpdateEvent = {
 			time: this.elapsedTime,
 			deltaTime: this.deltaTime,
 			forceDraw: param && param.forceDraw

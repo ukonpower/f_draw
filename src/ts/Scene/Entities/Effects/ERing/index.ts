@@ -5,10 +5,11 @@ import { hotGet, hotUpdate } from '~/ts/libs/glpower_local/Framework/Utils/Hot';
 
 import eRingVert from './shaders/eRing.vs';
 import eRingFrag from './shaders/eRing.fs';
+import { Entity } from 'maxpower/Entity';
 
 type RingType = 'line' | 'dash'
 
-export class ERing extends GLP.Entity {
+export class ERing extends Entity {
 
 	constructor( ringType: RingType = 'dash' ) {
 

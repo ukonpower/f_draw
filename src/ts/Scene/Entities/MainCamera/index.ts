@@ -1,6 +1,7 @@
 import * as GLP from 'glpower';
+import * as MXP from 'maxpower';
 
-import { blidge, gl, globalUniforms, power } from "~/ts/Globals";
+import { gl, globalUniforms, power } from "~/ts/Globals";
 import { LookAt } from '../../Components/LookAt';
 
 import fxaaFrag from './shaders/fxaa.fs';
@@ -18,12 +19,13 @@ import motionBlurFrag from './shaders/motionBlur.fs';
 import ssCompositeFrag from './shaders/ssComposite.fs';
 import compositeFrag from './shaders/composite.fs';
 import { ShakeViewer } from '../../Components/ShakeViewer';
+import { RenderCamera, RenderCameraParam } from '~/ts/libs/maxpower/Component/Camera/RenderCamera';
 
-export class MainCamera extends GLP.Entity {
+export class MainCamera extends MXP.Entity {
 
 	private commonUniforms: GLP.Uniforms;
 
-	private cameraComponent: GLP.RenderCamera;
+	private cameraComponent: RenderCamera;
 
 	private baseFov: number;
 
@@ -31,56 +33,56 @@ export class MainCamera extends GLP.Entity {
 
 	// fxaa
 
-	private fxaa: GLP.PostProcessPass;
+	private fxaa: MXP.PostProcessPass;
 
 	// bloom
 
 	private bloomRenderCount: number;
-	private bloomBright: GLP.PostProcessPass;
-	private bloomBlur: GLP.PostProcessPass[];
+	private bloomBright: MXP.PostProcessPass;
+	private bloomBlur: MXP.PostProcessPass[];
 	private rtBloomVertical: GLP.GLPowerFrameBuffer[];
 	private rtBloomHorizonal: GLP.GLPowerFrameBuffer[];
 
 	// light shaft
 
-	private lightShaft: GLP.PostProcessPass;
+	private lightShaft: MXP.PostProcessPass;
 	public rtLightShaft1: GLP.GLPowerFrameBuffer;
 	public rtLightShaft2: GLP.GLPowerFrameBuffer;
 
 	// ssr
 
-	private ssr: GLP.PostProcessPass;
+	private ssr: MXP.PostProcessPass;
 	public rtSSR1: GLP.GLPowerFrameBuffer;
 	public rtSSR2: GLP.GLPowerFrameBuffer;
 
 	// ssao
 
-	private ssao: GLP.PostProcessPass;
+	private ssao: MXP.PostProcessPass;
 	public rtSSAO1: GLP.GLPowerFrameBuffer;
 	public rtSSAO2: GLP.GLPowerFrameBuffer;
 
 	// ss composite
 
-	private ssComposite: GLP.PostProcessPass;
+	private ssComposite: MXP.PostProcessPass;
 
 	// dof
 
 	private dofParams: GLP.Vector;
-	private dofTarget: GLP.Entity | null;
+	private dofTarget: MXP.Entity | null;
 
-	public dofCoc: GLP.PostProcessPass;
-	public dofBokeh: GLP.PostProcessPass;
-	public dofComposite: GLP.PostProcessPass;
+	public dofCoc: MXP.PostProcessPass;
+	public dofBokeh: MXP.PostProcessPass;
+	public dofComposite: MXP.PostProcessPass;
 
 	// motion blur
 
-	private motionBlurTile: GLP.PostProcessPass;
-	private motionBlurNeighbor: GLP.PostProcessPass;
-	private motionBlur: GLP.PostProcessPass;
+	private motionBlurTile: MXP.PostProcessPass;
+	private motionBlurNeighbor: MXP.PostProcessPass;
+	private motionBlur: MXP.PostProcessPass;
 
 	// composite
 
-	private composite: GLP.PostProcessPass;
+	private composite: MXP.PostProcessPass;
 
 	// resolutions
 
@@ -97,7 +99,7 @@ export class MainCamera extends GLP.Entity {
 	private tmpVector1: GLP.Vector;
 	private tmpVector2: GLP.Vector;
 
-	constructor( param: GLP.RenderCameraParam ) {
+	constructor( param: RenderCameraParam ) {
 
 		super();
 
@@ -105,7 +107,7 @@ export class MainCamera extends GLP.Entity {
 
 		// components
 
-		this.cameraComponent = this.addComponent( "camera", new GLP.RenderCamera( param ) );
+		this.cameraComponent = this.addComponent( "camera", new RenderCamera( param ) );
 
 		this.lookAt = this.addComponent( 'lookAt', new LookAt() );
 		// this.addComponent( 'orbitControls', new OrbitControls( canvas ) );
@@ -141,7 +143,7 @@ export class MainCamera extends GLP.Entity {
 			power.createTexture().setting( { magFilter: gl.LINEAR, minFilter: gl.LINEAR } ),
 		] );
 
-		this.lightShaft = new GLP.PostProcessPass( {
+		this.lightShaft = new MXP.PostProcessPass( {
 			name: 'lightShaft',
 			frag: lightShaftFrag,
 			renderTarget: this.rtLightShaft1,
@@ -169,7 +171,7 @@ export class MainCamera extends GLP.Entity {
 			power.createTexture().setting( { magFilter: gl.LINEAR, minFilter: gl.LINEAR } ),
 		] );
 
-		this.ssr = new GLP.PostProcessPass( {
+		this.ssr = new MXP.PostProcessPass( {
 			name: 'ssr',
 			frag: ssrFrag,
 			renderTarget: this.rtSSR1,
@@ -217,7 +219,7 @@ export class MainCamera extends GLP.Entity {
 			power.createTexture().setting( { magFilter: gl.LINEAR, minFilter: gl.LINEAR } ),
 		] );
 
-		this.ssao = new GLP.PostProcessPass( {
+		this.ssao = new MXP.PostProcessPass( {
 			name: 'ssao',
 			frag: ssaoFrag,
 			renderTarget: this.rtSSAO1,
@@ -252,7 +254,7 @@ export class MainCamera extends GLP.Entity {
 
 		// ss-composite
 
-		this.ssComposite = new GLP.PostProcessPass( {
+		this.ssComposite = new MXP.PostProcessPass( {
 			name: 'ssComposite',
 			frag: ssCompositeFrag,
 			uniforms: GLP.UniformsUtils.merge( this.commonUniforms, {
@@ -288,7 +290,7 @@ export class MainCamera extends GLP.Entity {
 		this.dofTarget = null;
 		this.dofParams = new GLP.Vector( 10, 0.05, 20, 0.05 );
 
-		this.dofCoc = new GLP.PostProcessPass( {
+		this.dofCoc = new MXP.PostProcessPass( {
 			name: 'dof/coc',
 			frag: dofCoc,
 			uniforms: GLP.UniformsUtils.merge( globalUniforms.time, {
@@ -308,7 +310,7 @@ export class MainCamera extends GLP.Entity {
 			resolutionRatio: 0.5,
 		} );
 
-		this.dofBokeh = new GLP.PostProcessPass( {
+		this.dofBokeh = new MXP.PostProcessPass( {
 			name: 'dof/bokeh',
 			frag: dofBokeh,
 			uniforms: GLP.UniformsUtils.merge( globalUniforms.time, {
@@ -328,7 +330,7 @@ export class MainCamera extends GLP.Entity {
 			resolutionRatio: 0.5,
 		} );
 
-		this.dofComposite = new GLP.PostProcessPass( {
+		this.dofComposite = new MXP.PostProcessPass( {
 			name: 'dof/composite',
 			frag: dofComposite,
 			uniforms: GLP.UniformsUtils.merge( {
@@ -346,7 +348,7 @@ export class MainCamera extends GLP.Entity {
 
 		const motionBlurTile = 16;
 
-		this.motionBlurTile = new GLP.PostProcessPass( {
+		this.motionBlurTile = new MXP.PostProcessPass( {
 			name: 'motionBlurTile',
 			frag: motionBlurTileFrag,
 			uniforms: GLP.UniformsUtils.merge( {
@@ -365,7 +367,7 @@ export class MainCamera extends GLP.Entity {
 			passThrough: true,
 		} );
 
-		this.motionBlurNeighbor = new GLP.PostProcessPass( {
+		this.motionBlurNeighbor = new MXP.PostProcessPass( {
 			name: 'motionBlurNeighbor',
 			frag: motionBlurNeighborFrag,
 			uniforms: GLP.UniformsUtils.merge( {
@@ -384,7 +386,7 @@ export class MainCamera extends GLP.Entity {
 			passThrough: true,
 		} );
 
-		this.motionBlur = new GLP.PostProcessPass( {
+		this.motionBlur = new MXP.PostProcessPass( {
 			name: 'motionBlur',
 			frag: motionBlurFrag,
 			uniforms: GLP.UniformsUtils.merge( this.commonUniforms, {
@@ -408,7 +410,7 @@ export class MainCamera extends GLP.Entity {
 
 		// fxaa
 
-		this.fxaa = new GLP.PostProcessPass( {
+		this.fxaa = new MXP.PostProcessPass( {
 			name: 'fxaa',
 			frag: fxaaFrag,
 			uniforms: this.commonUniforms,
@@ -433,7 +435,7 @@ export class MainCamera extends GLP.Entity {
 
 		}
 
-		this.bloomBright = new GLP.PostProcessPass( {
+		this.bloomBright = new MXP.PostProcessPass( {
 			name: 'bloom/bright/',
 			frag: bloomBrightFrag,
 			uniforms: GLP.UniformsUtils.merge( globalUniforms.time, {
@@ -459,7 +461,7 @@ export class MainCamera extends GLP.Entity {
 			const resolution = new GLP.Vector();
 			this.resolutionBloom.push( resolution );
 
-			this.bloomBlur.push( new GLP.PostProcessPass( {
+			this.bloomBlur.push( new MXP.PostProcessPass( {
 				name: 'bloom/blur/' + i + '/v',
 				renderTarget: rtVertical,
 				frag: bloomBlurFrag,
@@ -487,7 +489,7 @@ export class MainCamera extends GLP.Entity {
 				passThrough: true,
 			} ) );
 
-			this.bloomBlur.push( new GLP.PostProcessPass( {
+			this.bloomBlur.push( new MXP.PostProcessPass( {
 				name: 'bloom/blur/' + i + '/w',
 				renderTarget: rtHorizonal,
 				frag: bloomBlurFrag,
@@ -521,7 +523,7 @@ export class MainCamera extends GLP.Entity {
 
 		// composite
 
-		this.composite = new GLP.PostProcessPass( {
+		this.composite = new MXP.PostProcessPass( {
 			name: 'composite',
 			frag: compositeFrag,
 			uniforms: GLP.UniformsUtils.merge( this.commonUniforms, {
@@ -545,7 +547,7 @@ export class MainCamera extends GLP.Entity {
 		} );
 
 
-		this.addComponent( "postprocess", new GLP.PostProcess( {
+		this.addComponent( "postprocess", new MXP.PostProcess( {
 			input: param.renderTarget.forwardBuffer.textures,
 			passes: [
 				this.lightShaft,
@@ -567,7 +569,7 @@ export class MainCamera extends GLP.Entity {
 
 		// events
 
-		this.on( 'notice/sceneCreated', ( root: GLP.Entity ) => {
+		this.on( 'notice/sceneCreated', ( root: MXP.Entity ) => {
 
 			this.lookAt.setTarget( root.getEntityByName( "CameraTarget" ) || null );
 			this.dofTarget = root.getEntityByName( 'CameraTargetDof' ) || null;
@@ -619,29 +621,9 @@ export class MainCamera extends GLP.Entity {
 
 	}
 
-	protected updateImpl( event: GLP.ComponentUpdateEvent ): void {
+	protected updateImpl( event: MXP.ComponentUpdateEvent ): void {
 
-		if ( this.stateCurve ) {
-
-			const state = this.stateCurve.setFrame( blidge.frame.current ).value;
-
-			// lookat
-
-			this.lookAt.enable = state.y > 0.5;
-
-			//  fov
-
-			const ff = 2 * Math.atan( 12 / ( 2 * state.x ) ) / Math.PI * 180;
-			this.baseFov = ff;
-
-			this.updateCameraParams( this.resolution );
-
-			// visible
-
-			this.composite.uniforms.uVisible.value = state.z;
-			this.composite.uniforms.uVignette.value = state.w;
-
-		}
+		this.updateCameraParams( this.resolution );
 
 		// dof params
 
@@ -695,7 +677,7 @@ export class MainCamera extends GLP.Entity {
 
 	}
 
-	protected resizeImpl( e: GLP.ComponentResizeEvent ): void {
+	protected resizeImpl( e: MXP.ComponentResizeEvent ): void {
 
 		this.resolution.copy( e.resolution );
 		this.resolutionInv.set( 1.0 / e.resolution.x, 1.0 / e.resolution.y, 0.0, 0.0 );
@@ -726,14 +708,6 @@ export class MainCamera extends GLP.Entity {
 
 		this.rtSSAO1.setSize( e.resolution );
 		this.rtSSAO2.setSize( e.resolution );
-
-	}
-
-	protected appendBlidgerImpl( blidger: GLP.BLidger ): void {
-
-		const node = blidger.node;
-
-		this.stateCurve = blidge.getCurveGroup( node.animation.state )!;
 
 	}
 

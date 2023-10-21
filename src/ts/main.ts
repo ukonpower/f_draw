@@ -1,25 +1,18 @@
 import * as GLP from 'glpower';
-import { blidge, canvas, gpuState } from './Globals';
+import { canvas, gpuState } from './Globals';
 import { Scene } from "./Scene";
-import { Music } from './Music';
 
 class App {
 
 	// elms
 
-	private startElm: HTMLElement;
 	private rootElm: HTMLElement;
 	private canvasWrapElm: HTMLElement;
 	private canvas: HTMLCanvasElement;
 
 	private scene: Scene;
-	private music: Music;
-
-	private playing: boolean;
 
 	constructor() {
-
-		this.playing = false;
 
 		/*-------------------------------
 			Element
@@ -36,7 +29,7 @@ class App {
 			</style>
 		`;
 
-		document.title = "Set-A";
+		document.title = "draw();";
 
 		this.rootElm = document.createElement( 'div' );
 		this.rootElm.classList.add( 'r' );
@@ -53,90 +46,16 @@ class App {
 		this.canvas = canvas;
 		this.canvasWrapElm.appendChild( this.canvas );
 
-		/*-------------------------------
-			StartElm
-		-------------------------------*/
 
-		this.startElm = document.createElement( 'div' );
-		this.startElm.classList.add( "s" );
-		this.rootElm.appendChild( this.startElm );
+		this.canvasWrapElm.style.display = 'block';
+		this.canvasWrapElm.style.cursor = 'none';
 
-		// fullscreen
-
-		const fullScreen = document.createElement( 'button' );
-		fullScreen.innerText = '1. Full Screen';
-		fullScreen.onclick = () => {
-
-			var elem = document.documentElement;
-
-			if ( elem.requestFullscreen ) {
-
-				elem.requestFullscreen();
-
-			}
-
-		};
-
-		this.startElm.appendChild( fullScreen );
-
-		// play button
-
-		const playButton = document.createElement( 'button' );
-		playButton.innerText = 'ready...';
-		playButton.disabled = true;
-		playButton.onclick = this.play.bind( this );
-		this.startElm.appendChild( playButton );
 
 		/*-------------------------------
 			Scene
 		-------------------------------*/
 
 		this.scene = new Scene();
-
-		this.scene.on( "loaded", () => {
-
-			this.resize();
-
-			if ( process.env.NODE_ENV == "production" ) {
-
-				this.scene.update( { forceDraw: true } );
-
-			}
-
-			playButton.innerText = '2. Play!';
-			playButton.disabled = false;
-
-			if ( process.env.NODE_ENV == "development" ) {
-
-				this.play();
-
-			}
-
-			blidge.on( 'sync/timeline', ( e:GLP.BLidgeFrame ) => {
-
-				const t = e.current / e.fps;
-
-				if ( e.playing ) {
-
-					this.music.play( t );
-
-				} else {
-
-					this.music.stop();
-
-				}
-
-			} );
-
-		} );
-
-		/*-------------------------------
-			Music
-		-------------------------------*/
-
-		this.music = new Music();
-
-
 
 		/*-------------------------------
 			Event
@@ -187,6 +106,8 @@ class App {
 
 		}
 
+		this.play();
+
 	}
 
 	private animate() {
@@ -199,21 +120,7 @@ class App {
 
 	private play() {
 
-		this.startElm.style.display = "none";
-		this.canvasWrapElm.style.display = 'block';
-		this.canvasWrapElm.style.cursor = 'none';
-
 		this.resize();
-
-		if ( process.env.NODE_ENV != "development" ) {
-
-			const start = 4;
-
-			this.music.play( start );
-			this.scene.play( start );
-
-		}
-
 		this.animate();
 
 	}
@@ -221,7 +128,7 @@ class App {
 	private resize() {
 
 		const aspect = 16 / 7;
-		const scale = 1.0;
+		const scale = 0.5;
 
 		this.canvas.width = 1920 * scale;
 		this.canvas.height = this.canvas.width / aspect;

@@ -5,10 +5,11 @@ import { hotGet, hotUpdate } from '~/ts/libs/glpower_local/Framework/Utils/Hot';
 
 import eGridLineVert from './shaders/eGridLine.vs';
 import eGridLineFrag from './shaders/eGridLine.fs';
+import { Entity } from 'maxpower/Entity';
 
 type DotType = 'line' | 'dash'
 
-export class EGridLine extends GLP.Entity {
+export class EGridLine extends Entity {
 
 	constructor( lineType: DotType = 'dash', res: GLP.Vector = new GLP.Vector( 4.0, 4.0 ), size: GLP.Vector = new GLP.Vector( 1.0, 1.0 ) ) {
 

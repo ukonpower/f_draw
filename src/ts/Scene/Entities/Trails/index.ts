@@ -6,8 +6,9 @@ import { hotGet, hotUpdate } from '~/ts/libs/glpower_local/Framework/Utils/Hot';
 import trailsVert from './shaders/trails.vs';
 import trailsFrag from './shaders/trails.fs';
 import trailsCompute from './shaders/trailsCompute.glsl';
+import { Entity } from 'maxpower/Entity';
 
-export class Trails extends GLP.Entity {
+export class Trails extends Entity {
 
 	private gpu: GLP.GPUComputePass;
 

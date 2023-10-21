@@ -1,13 +1,14 @@
 import * as GLP from 'glpower';
+import * as MXP from 'maxpower';
 
-export class ShakeViewer extends GLP.Component {
+export class ShakeViewer extends MXP.Component {
 
 	private shakePower: number;
 	private shakeSpeed: number;
 	private shakeMatrix: GLP.Matrix;
 	private shakeQua: GLP.Quaternion;
 
-	private cameraComponent?: GLP.Camera;
+	private cameraComponent?: MXP.Camera;
 
 	constructor( shakePower: number = 1.0, shakeSpeed: number = 1.0 ) {
 
@@ -20,7 +21,7 @@ export class ShakeViewer extends GLP.Component {
 
 	}
 
-	protected setEntityImpl( entity: GLP.Entity | null ): void {
+	protected setEntityImpl( entity: MXP.Entity | null ): void {
 
 		this.emit( "setEntity" );
 
@@ -44,7 +45,7 @@ export class ShakeViewer extends GLP.Component {
 
 	}
 
-	private calcMatrix( event: GLP.ComponentUpdateEvent ) {
+	private calcMatrix( event: MXP.ComponentUpdateEvent ) {
 
 		if ( this.entity ) {
 
@@ -64,7 +65,7 @@ export class ShakeViewer extends GLP.Component {
 
 			this.entity.matrixWorld.multiply( this.shakeMatrix );
 
-			const camera = this.entity.getComponent<GLP.Camera>( 'camera' );
+			const camera = this.entity.getComponent<MXP.Camera>( 'camera' );
 
 			if ( camera ) {
 

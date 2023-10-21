@@ -1,4 +1,6 @@
 import * as GLP from 'glpower';
+import * as MXP from 'maxpower';
+
 import { gl } from '~/ts/Globals';
 import { Renderer } from '~/ts/Scene/Renderer';
 
@@ -6,7 +8,7 @@ export class TexProcedural extends GLP.GLPowerTexture {
 
 	private frameBuffer: GLP.GLPowerFrameBuffer;
 
-	constructor( param: GLP.PostProcessPassParam, resolution: GLP.Vector = new GLP.Vector( 1024, 1024 ) ) {
+	constructor( param: MXP.PostProcessPassParam, resolution: GLP.Vector = new GLP.Vector( 1024, 1024 ) ) {
 
 		super( gl );
 
@@ -22,7 +24,7 @@ export class TexProcedural extends GLP.GLPowerTexture {
 		} );
 
 		this.frameBuffer = new GLP.GLPowerFrameBuffer( gl ).setTexture( [ this ] ).setSize( 1024, 1024 );
-		renderer.renderPostProcess( new GLP.PostProcess( { passes: [ new GLP.PostProcessPass( { ...param, renderTarget: this.frameBuffer } ) ] } ) );
+		renderer.renderPostProcess( new MXP.PostProcess( { passes: [ new MXP.PostProcessPass( { ...param, renderTarget: this.frameBuffer } ) ] } ) );
 
 	}
 

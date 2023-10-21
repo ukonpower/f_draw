@@ -47,6 +47,7 @@ export default defineConfig( {
 	},
 	resolve: {
 		alias: {
+			"maxpower": path.join( __dirname, "src/ts/libs/maxpower/" ),
 			"glpower": path.join( __dirname, "src/ts/libs/glpower_local/" ),
 			"~": path.join( __dirname, "src" )
 		},

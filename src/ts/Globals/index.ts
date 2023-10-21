@@ -3,7 +3,6 @@ import * as GLP from 'glpower';
 export const canvas = document.createElement( "canvas" );
 export const gl = canvas.getContext( 'webgl2' )!;
 export const power = new GLP.Power( gl );
-export const blidge = new GLP.BLidge();
 
 export const globalUniforms: {[key: string]: GLP.Uniforms} = {
 	time: {
@@ -56,7 +55,7 @@ export const globalUniforms: {[key: string]: GLP.Uniforms} = {
 -------------------------------*/
 
 import { GPUState } from '../libs/GPUState';
-export const gpuState: GPUState | undefined = undefined;
+export let gpuState: GPUState | undefined = undefined;
 
-// import 'webgl-memory';
-// gpuState = new GPUState();
+import 'webgl-memory';
+gpuState = new GPUState();

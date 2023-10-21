@@ -5,8 +5,9 @@ import { hotGet, hotUpdate } from '~/ts/libs/glpower_local/Framework/Utils/Hot';
 
 import eCrossVert from './shaders/eCross.vs';
 import eCrossFrag from './shaders/eCross.fs';
+import { Entity } from 'maxpower/Entity';
 
-export class ECross extends GLP.Entity {
+export class ECross extends Entity {
 
 	constructor() {
 

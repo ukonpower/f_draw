@@ -1,8 +1,9 @@
 import * as GLP from 'glpower';
+import * as MXP from 'maxpower';
 
-export class LookAt extends GLP.Component {
+export class LookAt extends MXP.Component {
 
-	private target: GLP.Entity | null;
+	private target: MXP.Entity | null;
 
 	private up: GLP.Vector;
 	private entityWorldPos: GLP.Vector;
@@ -22,13 +23,13 @@ export class LookAt extends GLP.Component {
 
 	}
 
- 	public setTarget( target: GLP.Entity | null ) {
+ 	public setTarget( target: MXP.Entity | null ) {
 
 		this.target = target;
 
 	}
 
-	protected setEntityImpl( entity: GLP.Entity | null ): void {
+	protected setEntityImpl( entity: MXP.Entity | null ): void {
 
 		this.emit( "setEntity" );
 
@@ -61,7 +62,7 @@ export class LookAt extends GLP.Component {
 
 			this.entity.matrixWorld.lookAt( this.entityWorldPos, this.targetWorldPos, this.up );
 
-			const camera = this.entity.getComponent<GLP.Camera>( 'camera' );
+			const camera = this.entity.getComponent<MXP.Camera>( 'camera' );
 
 			if ( camera ) {
 

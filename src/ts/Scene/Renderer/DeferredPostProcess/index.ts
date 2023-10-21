@@ -1,15 +1,16 @@
 import * as GLP from 'glpower';
+import * as MXP from 'maxpower';
 
-import { RenderCameraTarget } from '~/ts/libs/glpower_local/Framework/Component/Camera/RenderCamera';
 import deferredShadingFrag from './shaders/deferredShading.fs';
+import { RenderCameraTarget } from '~/ts/libs/maxpower/Component/Camera/RenderCamera';
 
-export class DeferredPostProcess extends GLP.PostProcess {
+export class DeferredPostProcess extends MXP.PostProcess {
 
-	private shading: GLP.PostProcessPass;
+	private shading: MXP.PostProcessPass;
 
 	constructor() {
 
-		const shading = new GLP.PostProcessPass( {
+		const shading = new MXP.PostProcessPass( {
 			name: "deferredShading",
 			frag: deferredShadingFrag,
 		} );

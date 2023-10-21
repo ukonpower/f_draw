@@ -5,8 +5,9 @@ import { gl, globalUniforms } from '~/ts/Globals';
 import dustParticlesVert from './shaders/dustParticles.vs';
 import dustParticlesFrag from './shaders/dustParticles.fs';
 import { hotGet, hotUpdate } from '~/ts/libs/glpower_local/Framework/Utils/Hot';
+import { Entity } from 'maxpower/Entity';
 
-export class DustParticles extends GLP.Entity {
+export class DustParticles extends Entity {
 
 	constructor() {
 

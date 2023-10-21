@@ -4,8 +4,9 @@ import { hotGet, hotUpdate } from '~/ts/libs/glpower_local/Framework/Utils/Hot';
 import hudVert from './shaders/hud.vs';
 import hudFrag from './shaders/hud.fs';
 import { gl, globalUniforms } from '~/ts/Globals';
+import { Entity } from 'maxpower/Entity';
 
-export class HUD extends GLP.Entity {
+export class HUD extends Entity {
 
 	constructor() {
 
@@ -30,7 +31,7 @@ export class HUD extends GLP.Entity {
 
 		};
 
-		const border = new GLP.Entity();
+		const border = new Entity();
 		this.add( border );
 
 		const borderGeo = border.addComponent( "geometry", new GLP.PlaneGeometry( 2.0, 2.0 ) );

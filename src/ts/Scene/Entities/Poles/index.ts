@@ -6,8 +6,9 @@ import { power } from '~/ts/Globals';
 
 import basicVert from '~/shaders/basic.vs';
 import basicFrag from '~/shaders/basic.fs';
+import { Entity } from 'maxpower/Entity';
 
-export class Poles extends GLP.Entity {
+export class Poles extends Entity {
 
 	private length: number;
 
@@ -19,7 +20,7 @@ export class Poles extends GLP.Entity {
 
 		let prev: Pole | null = null;
 
-		const wiresModel = new GLP.Entity();
+		const wiresModel = new Entity();
 
 
 		for ( let i = 0; i < num; i ++ ) {
@@ -52,7 +53,7 @@ export class Poles extends GLP.Entity {
 
 		}
 
-		const wires = new GLP.Entity();
+		const wires = new Entity();
 		wires.addComponent( "geometry", new Modeler( power ).bakeEntity( wiresModel ) );
 		wires.addComponent( "material", new GLP.Material( {
 			name: "wires",

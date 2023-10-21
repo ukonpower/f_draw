@@ -4,10 +4,11 @@ import { ECross } from '../ECross';
 import { EGridDots } from '../EGridDots';
 import { ERing } from '../ERing';
 import { EGridLine } from '../EGridLine';
+import { Entity, EntityUpdateEvent } from 'maxpower/Entity';
 
-export class EArea extends GLP.Entity {
+export class EArea extends Entity {
 
-	private effects: GLP.Entity[];
+	private effects: Entity[];
 	private range: GLP.Vector;
 
 	constructor( num = 50.0, range = new GLP.Vector( 10, 5, 5 ) ) {
@@ -50,7 +51,7 @@ export class EArea extends GLP.Entity {
 
 			}
 
-			return new GLP.Entity();
+			return new Entity();
 
 		};
 
@@ -70,7 +71,7 @@ export class EArea extends GLP.Entity {
 
 	}
 
-	protected updateImpl( event: GLP.EntityUpdateEvent ): void {
+	protected updateImpl( event: EntityUpdateEvent ): void {
 
 		for ( let i = 0; i < this.effects.length; i ++ ) {
 

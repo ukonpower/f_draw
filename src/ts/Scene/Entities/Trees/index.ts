@@ -1,7 +1,8 @@
 import * as GLP from 'glpower';
 import { Tree } from '../Tree';
+import { Entity, EntityUpdateEvent } from 'maxpower/Entity';
 
-export class Trees extends GLP.Entity {
+export class Trees extends Entity {
 
 	private length: number;
 
@@ -25,7 +26,7 @@ export class Trees extends GLP.Entity {
 
 	}
 
-	protected updateImpl( event: GLP.EntityUpdateEvent ): void {
+	protected updateImpl( event: EntityUpdateEvent ): void {
 	}
 
 }

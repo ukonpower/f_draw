@@ -3,13 +3,15 @@ import * as GLP from 'glpower';
 import poleFrag from './shaders/pole.fs';
 import poleVert from './shaders/pole.vs';
 import { globalUniforms, power } from '~/ts/Globals';
-import { hotGet } from '~/ts/libs/glpower_local/Framework/Utils/Hot';
 import { Modeler } from '~/ts/libs/Modeler';
+import { Entity } from 'maxpower/Entity';
+import { hotGet } from 'maxpower/Utils/Hot';
+import { CylinderGeometry } from 'maxpower/Component/Geometry/CylinderGeometry';
 
-export class Pole extends GLP.Entity {
+export class Pole extends Entity {
 
 	public nextPole: Pole | null;
-	public gaishi: GLP.Entity[];
+	public gaishi: Entity[];
 
 	constructor() {
 
@@ -23,20 +25,20 @@ export class Pole extends GLP.Entity {
 
 		// model
 
-		const model = new GLP.Entity();
+		const model = new Entity();
 		const modeler = new Modeler( power );
 
 		// pole
 
-		const pole = new GLP.Entity();
-		pole.addComponent( "geometry", new GLP.CylinderGeometry( 0.30, 0.20, height ) );
+		const pole = new Entity();
+		pole.addComponent( "geometry", new CylinderGeometry( 0.30, 0.20, height ) );
 		pole.position.y += height / 2;
 		model.add( pole );
 
 		// ashiba
 
-		const ashiba = new GLP.Entity();
-		const ashibaGeo = new GLP.CylinderGeometry( 0.03, 0.03, 0.4 );
+		const ashiba = new Entity();
+		const ashibaGeo = new CylinderGeometry( 0.03, 0.03, 0.4 );
 		ashibaGeo.setAttribute( 'oPos', new Float32Array( ( ()=>{
 
 			const r: number[] = [];
@@ -63,7 +65,7 @@ export class Pole extends GLP.Entity {
 
 		// sasae
 
-		const sasae = new GLP.Entity();
+		const sasae = new Entity();
 		sasae.addComponent( "geometry", new GLP.CubeGeometry( 2.5, 0.2, 0.15 ) );
 		sasae.position.set( 0.3, height * 0.85, 0.3 );
 		sasae.quaternion.setFromEuler( new GLP.Euler( 0, Math.PI / 2, 0 ) );
@@ -73,14 +75,14 @@ export class Pole extends GLP.Entity {
 
 		for ( let i = 0; i < 3; i ++ ) {
 
-			const gaishi = new GLP.Entity();
-			gaishi.addComponent( "geometry", new GLP.CylinderGeometry( 0.09, 0.09, 0.24 ) );
+			const gaishi = new Entity();
+			gaishi.addComponent( "geometry", new CylinderGeometry( 0.09, 0.09, 0.24 ) );
 			gaishi.position.set( ( i / 2 - 0.5 ) * 2, 0.25, 0.0 );
 			sasae.add( gaishi );
 
 			gaishi.updateMatrix( true );
 
-			const gaishiDummy = new GLP.Entity();
+			const gaishiDummy = new Entity();
 			gaishiDummy.applyMatrix( gaishi.matrixWorld );
 			this.add( gaishiDummy );
 			this.gaishi.push( gaishiDummy );
@@ -89,8 +91,8 @@ export class Pole extends GLP.Entity {
 
 		// henatsu
 
-		const henatsu = new GLP.Entity();
-		henatsu.addComponent( "geometry", new GLP.CylinderGeometry( 0.4, 0.4, 1.0 ) );
+		const henatsu = new Entity();
+		henatsu.addComponent( "geometry", new CylinderGeometry( 0.4, 0.4, 1.0 ) );
 		henatsu.position.set( 0.3, height * 0.7, 0.3 );
 		henatsu.quaternion.setFromEuler( new GLP.Euler( 0, Math.PI / 2, 0 ) );
 		model.add( henatsu );

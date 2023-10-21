@@ -1,28 +1,30 @@
 import * as GLP from 'glpower';
+import * as MXP from 'maxpower';
 
 import { gl, gpuState, power } from "~/ts/Globals";
 import { ProgramManager } from "./ProgramManager";
 import { shaderParse } from "./ShaderParser";
 import { DeferredPostProcess } from './DeferredPostProcess';
+import { RenderCamera } from '~/ts/libs/maxpower/Component/Camera/RenderCamera';
 
 export type RenderStack = {
-	light: GLP.Entity[];
-	camera: GLP.Entity[];
-	envMap: GLP.Entity[];
-	shadowMap: GLP.Entity[];
-	deferred: GLP.Entity[];
-	forward: GLP.Entity[];
-	gpuCompute: GLP.Entity[];
+	light: MXP.Entity[];
+	camera: MXP.Entity[];
+	envMap: MXP.Entity[];
+	shadowMap: MXP.Entity[];
+	deferred: MXP.Entity[];
+	forward: MXP.Entity[];
+	gpuCompute: MXP.Entity[];
 }
 
 type LightInfo = {
 	position: GLP.Vector;
 	direction: GLP.Vector;
 	color: GLP.Vector;
-	component: GLP.Light;
+	component: MXP.Light;
 }
 
-export type CollectedLights = {[K in GLP.LightType]: LightInfo[]}
+export type CollectedLights = {[K in MXP.LightType]: LightInfo[]}
 
 type CameraOverride = {
 	viewMatrix?: GLP.Matrix;
@@ -45,7 +47,7 @@ type GPUState = {
 
 export let textureUnit = 0;
 
-export class Renderer extends GLP.Entity {
+export class Renderer extends MXP.Entity {
 
 	private programManager: ProgramManager;
 
@@ -63,7 +65,7 @@ export class Renderer extends GLP.Entity {
 
 	// quad
 
-	private quad: GLP.Geometry;
+	private quad: MXP.Geometry;
 
 	// gpu state
 
@@ -105,7 +107,7 @@ export class Renderer extends GLP.Entity {
 
 		// quad
 
-		this.quad = new GLP.PlaneGeometry( 2.0, 2.0 );
+		this.quad = new MXP.PlaneGeometry( 2.0, 2.0 );
 
 		// gpu
 
@@ -187,14 +189,14 @@ export class Renderer extends GLP.Entity {
 
 		// light
 
-		const shadowMapLightList: GLP.Entity[] = [];
+		const shadowMapLightList: MXP.Entity[] = [];
 		const prevLightsNum: {[key:string]: number} = {};
 
 		const lightKeys = Object.keys( this.lights );
 
 		for ( let i = 0; i < lightKeys.length; i ++ ) {
 
-			const l = lightKeys[ i ] as GLP.LightType;
+			const l = lightKeys[ i ] as MXP.LightType;
 			prevLightsNum[ l ] = this.lights[ l ].length;
 			this.lights[ l ].length = 0;
 
@@ -216,7 +218,7 @@ export class Renderer extends GLP.Entity {
 
 		for ( let i = 0; i < lightKeys.length; i ++ ) {
 
-			const l = lightKeys[ i ] as GLP.LightType;
+			const l = lightKeys[ i ] as MXP.LightType;
 
 			if ( prevLightsNum[ l ] != this.lights[ l ].length ) {
 
@@ -231,7 +233,7 @@ export class Renderer extends GLP.Entity {
 
 		for ( let i = 0; i < stack.gpuCompute.length; i ++ ) {
 
-			const gpu = stack.gpuCompute[ i ].getComponent<GLP.GPUCompute>( 'gpuCompute' )!;
+			const gpu = stack.gpuCompute[ i ].getComponent<MXP.GPUCompute>( 'gpuCompute' )!;
 
 			this.renderPostProcess( gpu );
 
@@ -242,7 +244,7 @@ export class Renderer extends GLP.Entity {
 		for ( let i = 0; i < shadowMapLightList.length; i ++ ) {
 
 			const lightEntity = shadowMapLightList[ i ];
-			const lightComponent = lightEntity.getComponent<GLP.Light>( 'light' )!;
+			const lightComponent = lightEntity.getComponent<MXP.Light>( 'light' )!;
 
 			if ( lightComponent.renderTarget ) {
 
@@ -263,7 +265,7 @@ export class Renderer extends GLP.Entity {
 		for ( let i = 0; i < stack.camera.length; i ++ ) {
 
 			const cameraEntity = stack.camera[ i ];
-			const cameraComponent = cameraEntity.getComponent<GLP.RenderCamera>( 'camera' )!;
+			const cameraComponent = cameraEntity.getComponent<RenderCamera>( 'camera' )!;
 
 			gl.disable( gl.BLEND );
 
@@ -286,7 +288,7 @@ export class Renderer extends GLP.Entity {
 
 			gl.disable( gl.BLEND );
 
-			const postProcess = cameraEntity.getComponent<GLP.PostProcess>( 'postprocess' );
+			const postProcess = cameraEntity.getComponent<MXP.PostProcess>( 'postprocess' );
 
 			if ( postProcess ) {
 
@@ -304,9 +306,9 @@ export class Renderer extends GLP.Entity {
 
 	}
 
-	public renderCamera( renderType: GLP.MaterialRenderType, cameraEntity: GLP.Entity, entities: GLP.Entity[], renderTarget: GLP.GLPowerFrameBuffer | null, override?: CameraOverride, clear:boolean = true ) {
+	public renderCamera( renderType: MXP.MaterialRenderType, cameraEntity: MXP.Entity, entities: MXP.Entity[], renderTarget: GLP.GLPowerFrameBuffer | null, override?: CameraOverride, clear:boolean = true ) {
 
-		const camera = cameraEntity.getComponent<GLP.Camera>( "camera" ) || cameraEntity.getComponent<GLP.Light>( "light" )!;
+		const camera = cameraEntity.getComponent<MXP.Camera>( "camera" ) || cameraEntity.getComponent<MXP.Light>( "light" )!;
 
 		const drawParam: DrawParam = {
 			viewMatrix: camera.viewMatrix,
@@ -358,8 +360,8 @@ export class Renderer extends GLP.Entity {
 		for ( let i = 0; i < entities.length; i ++ ) {
 
 			const entity = entities[ i ];
-			const material = entity.getComponent<GLP.Material>( "material" )!;
-			const geometry = entity.getComponent<GLP.Geometry>( "geometry" )!;
+			const material = entity.getComponent<MXP.Material>( "material" )!;
+			const geometry = entity.getComponent<MXP.Geometry>( "geometry" )!;
 
 			drawParam.modelMatrixWorld = entity.matrixWorld;
 			drawParam.modelMatrixWorldPrev = entity.matrixWorldPrev;
@@ -370,9 +372,9 @@ export class Renderer extends GLP.Entity {
 
 	}
 
-	private collectLight( lightEntity: GLP.Entity ) {
+	private collectLight( lightEntity: MXP.Entity ) {
 
-		const lightComponent = lightEntity.getComponent<GLP.Light>( 'light' )!;
+		const lightComponent = lightEntity.getComponent<MXP.Light>( 'light' )!;
 		const type = lightComponent.lightType;
 
 		const info: LightInfo = {
@@ -396,7 +398,7 @@ export class Renderer extends GLP.Entity {
 
 	}
 
-	public renderPostProcess( postprocess: GLP.PostProcess, matrix?: CameraOverride ) {
+	public renderPostProcess( postprocess: MXP.PostProcess, matrix?: CameraOverride ) {
 
 		// render
 
@@ -472,7 +474,7 @@ export class Renderer extends GLP.Entity {
 
 	}
 
-	private draw( drawId: string, renderType: GLP.MaterialRenderType, geometry: GLP.Geometry, material: GLP.Material, param?: DrawParam ) {
+	private draw( drawId: string, renderType: MXP.MaterialRenderType, geometry: MXP.Geometry, material: MXP.Material, param?: DrawParam ) {
 
 		textureUnit = 0;
 
@@ -781,7 +783,7 @@ export class Renderer extends GLP.Entity {
 
 	}
 
-	public resize( e: GLP.EntityResizeEvent ) {
+	public resize( e: MXP.EntityResizeEvent ) {
 
 		this.canvasSize.copy( e.resolution );
 

@@ -15,6 +15,7 @@
 		"baseUrl": ".",
 		"paths": {
 		  "glpower" : ["./src/ts/libs/glpower_local"],
+		  "maxpower" : ["./src/ts/libs/maxpower"],
 		  "~/*" : ["./src/*"],
 		}
 	},

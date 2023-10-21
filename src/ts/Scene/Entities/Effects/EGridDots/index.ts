@@ -5,10 +5,11 @@ import { hotGet, hotUpdate } from '~/ts/libs/glpower_local/Framework/Utils/Hot';
 
 import eGridDotsVert from './shaders/eGridDots.vs';
 import eGridDotsFrag from './shaders/eGridDots.fs';
+import { Entity } from 'maxpower/Entity';
 
 type DotType = 'square' | 'circle'
 
-export class EGridDots extends GLP.Entity {
+export class EGridDots extends Entity {
 
 	constructor( dotType: DotType = 'circle', res: GLP.Vector = new GLP.Vector( 8.0, 8.0 ), size: GLP.Vector = new GLP.Vector( 1.0, 1.0 ), dotSclae : number = 1.0 ) {
 

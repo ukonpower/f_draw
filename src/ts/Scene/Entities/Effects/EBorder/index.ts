@@ -5,8 +5,9 @@ import { hotGet, hotUpdate } from '~/ts/libs/glpower_local/Framework/Utils/Hot';
 
 import eBorderVert from './shaders/eBorder.vs';
 import eBorderFrag from './shaders/eBorder.fs';
+import { Entity } from 'maxpower/Entity';
 
-export class EBorder extends GLP.Entity {
+export class EBorder extends Entity {
 
 	constructor() {
 

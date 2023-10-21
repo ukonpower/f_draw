@@ -1,7 +1,9 @@
 import * as GLP from 'glpower';
+import { Camera } from 'maxpower';
+import { Component, ComponentUpdateEvent } from 'maxpower/Component';
 import { Pointer, PointerEventArgs } from '~/ts/libs/Pointer';
 
-export class OrbitControls extends GLP.Component {
+export class OrbitControls extends Component {
 
 	private pointer: Pointer;
 	private offsetPos: GLP.Vector;
@@ -49,7 +51,7 @@ export class OrbitControls extends GLP.Component {
 
 	}
 
-	protected afterUpdateImpl( event: GLP.ComponentUpdateEvent ): void {
+	protected afterUpdateImpl( event: ComponentUpdateEvent ): void {
 
 		const entity = event.entity;
 
@@ -61,7 +63,7 @@ export class OrbitControls extends GLP.Component {
 
 		// calc viewmatrix
 
-		const cameraComponent = entity.getComponent<GLP.Camera>( "camera" );
+		const cameraComponent = entity.getComponent<Camera>( "camera" );
 
 		if ( cameraComponent ) {
 

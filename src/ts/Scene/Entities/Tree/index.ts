@@ -9,8 +9,10 @@ import treeFrag from './shaders/tree.fs';
 import { hotGet, hotUpdate } from '~/ts/libs/glpower_local/Framework/Utils/Hot';
 import { shaderParse } from '../../Renderer/ShaderParser';
 import { Modeler } from '~/ts/libs/Modeler';
+import { Entity } from 'maxpower/Entity';
+import { CylinderGeometry } from 'maxpower';
 
-export class Tree extends GLP.Entity {
+export class Tree extends Entity {
 
 	constructor() {
 
@@ -45,7 +47,7 @@ export class Tree extends GLP.Entity {
 
 		_( new GLP.Vector(), new GLP.Quaternion(), 1.0 );
 
-		const geo = new GLP.CylinderGeometry( 0.1, 0.1, 1.0 );
+		const geo = new CylinderGeometry( 0.1, 0.1, 1.0 );
 		geo.setAttribute( "instancePosition", new Float32Array( positionArray ), 3, { instanceDivisor: 1 } );
 		geo.setAttribute( "instanceQuaternion", new Float32Array( quaternionArray ), 4, { instanceDivisor: 1 } );
 		geo.setAttribute( "instanceScale", new Float32Array( scaleArray ), 3, { instanceDivisor: 1 } );

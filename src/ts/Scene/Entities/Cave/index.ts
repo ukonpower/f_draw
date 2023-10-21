@@ -3,8 +3,9 @@ import * as GLP from 'glpower';
 import caveFrag from './shaders/cave.fs';
 import { globalUniforms } from '~/ts/Globals';
 import { hotGet, hotUpdate } from '~/ts/libs/glpower_local/Framework/Utils/Hot';
+import { Entity } from 'maxpower/Entity';
 
-export class Cave extends GLP.Entity {
+export class Cave extends Entity {
 
 	constructor() {
 

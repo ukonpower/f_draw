@@ -6,8 +6,9 @@ import { hotGet, hotUpdate } from '~/ts/libs/glpower_local/Framework/Utils/Hot';
 import fluidParticlesVert from './shaders/fluidParticles.vs';
 import fluidParticlesFrag from './shaders/fluidParticles.fs';
 import fluidParticlesCompute from './shaders/fluidParticlesCompute.glsl';
+import { Entity } from 'maxpower/Entity';
 
-export class FluidParticles extends GLP.Entity {
+export class FluidParticles extends Entity {
 
 	private gpu: GLP.GPUComputePass;
 

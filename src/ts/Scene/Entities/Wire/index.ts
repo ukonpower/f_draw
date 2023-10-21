@@ -2,8 +2,10 @@ import * as GLP from 'glpower';
 
 import poleVert from './shaders/pole.vs';
 import poleFrag from '~/shaders/basic.fs';
+import { Entity } from 'maxpower/Entity';
+import { CylinderGeometry } from 'maxpower';
 
-export class Wire extends GLP.Entity {
+export class Wire extends Entity {
 
 	public start: GLP.Vector;
 	public end: GLP.Vector;
@@ -27,7 +29,7 @@ export class Wire extends GLP.Entity {
 			}
 		};
 
-		this.addComponent( 'geometry', new GLP.CylinderGeometry( 0.03, 0.03, 1, 8, 10, false ) );
+		this.addComponent( 'geometry', new CylinderGeometry( 0.03, 0.03, 1, 8, 10, false ) );
 		this.addComponent( 'material', new GLP.Material( {
 			vert: poleVert,
 			frag: poleFrag,
@@ -47,7 +49,7 @@ export class Wire extends GLP.Entity {
 
 	}
 
-	public entityToEntity( start: GLP.Entity, end: GLP.Entity ) {
+	public entityToEntity( start: Entity, end: Entity ) {
 
 		const posStart = start.position.clone();
 		const posEnd = end.position.clone();

@@ -1,6 +1,7 @@
 import * as GLP from 'glpower';
+import { Component, ComponentUpdateEvent } from 'maxpower/Component';
 
-export class TurnTable extends GLP.Component {
+export class TurnTable extends Component {
 
 	private speed: number;
 
@@ -16,7 +17,7 @@ export class TurnTable extends GLP.Component {
 
 	}
 
-	protected updateImpl( event: GLP.ComponentUpdateEvent ): void {
+	protected updateImpl( event: ComponentUpdateEvent ): void {
 
 		const entity = event.entity;
 
