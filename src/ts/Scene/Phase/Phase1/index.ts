@@ -10,11 +10,13 @@ export class Phase1 extends Phase {
 		super( );
 
 		const light = new MXP.Entity();
-		light.position.set( 0, 10, 0 );
+		light.position.set( 0, 5, 0 );
 		light.addComponent( "light", new MXP.Light( {
 			lightType: "spot",
-			intensity: 2,
+			intensity: 4,
 			blend: 1,
+			angle: Math.PI / 2 * 0.8,
+			useShadowMap: true,
 		} ) );
 		this.add( light );
 
@@ -27,7 +29,7 @@ export class Phase1 extends Phase {
 
 		this.on( 'update', () => {
 
-			box.quaternion.multiply( new GLP.Quaternion().setFromEuler( new GLP.Euler( 0.01, 0.001, 0.01 ) ) );
+			box.quaternion.multiply( new GLP.Quaternion().setFromEuler( new GLP.Euler( 0.005, 0.003, 0.001 ) ) );
 
 		} );
 

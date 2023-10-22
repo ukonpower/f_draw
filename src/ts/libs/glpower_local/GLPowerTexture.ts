@@ -4,6 +4,7 @@ import { Types } from "./types";
 type ImagePretense = {
 	width: number,
 	height: number
+	data?: any
 }
 
 type GLPowerTextureSetting = {
@@ -62,6 +63,15 @@ export class GLPowerTexture {
 			...param
 		};
 
+		this.gl.bindTexture( this.gl.TEXTURE_2D, this.texture );
+
+		this.gl.texParameteri( this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this._setting.magFilter );
+		this.gl.texParameteri( this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this._setting.minFilter );
+		this.gl.texParameterf( this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this._setting.wrapS );
+		this.gl.texParameterf( this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this._setting.wrapT );
+
+		this.gl.bindTexture( this.gl.TEXTURE_2D, null );
+
 		this.attach( this.image );
 
 		return this;
@@ -84,7 +94,7 @@ export class GLPowerTexture {
 
 			} else {
 
-				this.gl.texImage2D( this.gl.TEXTURE_2D, 0, this._setting.internalFormat, this.image.width, this.image.height, 0, this._setting.format, this._setting.type, null );
+				this.gl.texImage2D( this.gl.TEXTURE_2D, 0, this._setting.internalFormat, this.image.width, this.image.height, 0, this._setting.format, this._setting.type, this.image.data || null );
 
 			}
 
@@ -95,11 +105,6 @@ export class GLPowerTexture {
 			this.gl.texImage2D( this.gl.TEXTURE_2D, 0, this._setting.internalFormat, this.size.x, this.size.y, 0, this._setting.format, this._setting.type, null );
 
 		}
-
-		this.gl.texParameteri( this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this._setting.magFilter );
-		this.gl.texParameteri( this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this._setting.minFilter );
-		this.gl.texParameterf( this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this._setting.wrapS );
-		this.gl.texParameterf( this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this._setting.wrapT );
 
 		if ( this._setting.generateMipmap ) {
 

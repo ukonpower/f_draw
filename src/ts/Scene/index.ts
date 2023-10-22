@@ -1,13 +1,13 @@
 import * as GLP from 'glpower';
 import * as MXP from 'maxpower';
 
-import { gl, globalUniforms, power } from '../Globals';
+import { audio, gl, globalUniforms, power } from '../Globals';
 
 import { MainCamera } from './Entities/MainCamera';
 import { Renderer } from './Renderer';
 import { createTextures } from './Textures';
-import { Phase1 } from './Entities/Phase/Phase1';
-import { Common } from './Entities/Phase/Common';
+import { Common } from './Phase/Common';
+import { Phase1 } from './Phase/Phase1';
 
 type SceneUpdateParam = {
 	forceDraw: boolean
@@ -32,6 +32,10 @@ export class Scene extends GLP.EventEmitter {
 		this.currentTime = new Date().getTime();
 		this.elapsedTime = 0;
 		this.deltaTime = 0;
+
+		// textures
+
+		createTextures();
 
 		// root
 
@@ -67,10 +71,6 @@ export class Scene extends GLP.EventEmitter {
 		this.camera.position.set( 0, 0, 4 );
 		this.root.add( this.camera );
 
-		// textures
-
-		createTextures();
-
 		// Wrold
 
 		this.root.add( new Common() );
@@ -101,6 +101,8 @@ export class Scene extends GLP.EventEmitter {
 			deltaTime: this.deltaTime,
 			forceDraw: param && param.forceDraw
 		};
+
+		audio.update( this.deltaTime );
 
 		const renderStack = this.root.update( event );
 

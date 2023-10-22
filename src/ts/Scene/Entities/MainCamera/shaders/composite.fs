@@ -2,6 +2,7 @@
 
 uniform sampler2D backbuffer0;
 uniform sampler2D uBloomTexture[4];
+uniform sampler2D uAudioWaveTex;
 
 uniform vec3 cameraPosition;
 uniform float cameraNear;
@@ -50,5 +51,9 @@ void main( void ) {
 	col *= smoothstep( 1.0, 0.4, len );
 
 	outColor = vec4( col, 1.0 );
+
+	float audioWave = texture(uAudioWaveTex, vUv ).x - 0.5;
+
+	// outColor.xyz += step( length( vUv.y - 0.5 + audioWave * 0.8 ), 0.001 + abs( audioWave * 0.5 ));
 
 }

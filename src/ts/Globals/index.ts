@@ -3,7 +3,7 @@ import * as GLP from 'glpower';
 export const canvas = document.createElement( "canvas" );
 export const gl = canvas.getContext( 'webgl2' )!;
 export const power = new GLP.Power( gl );
-
+export const audio = new Audio();
 export const globalUniforms: {[key: string]: GLP.Uniforms} = {
 	time: {
 		uTime: {
@@ -47,7 +47,8 @@ export const globalUniforms: {[key: string]: GLP.Uniforms} = {
 			type: 'Matrix4fv'
 		}
 	},
-	tex: {}
+	tex: {},
+	audio: {},
 };
 
 /*-------------------------------
@@ -58,4 +59,5 @@ import { GPUState } from '../libs/GPUState';
 export let gpuState: GPUState | undefined = undefined;
 
 import 'webgl-memory';
+import { Audio } from '../libs/Audio';
 gpuState = new GPUState();

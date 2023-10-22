@@ -539,7 +539,7 @@ export class MainCamera extends MXP.Entity {
 					value: 0,
 					type: "1f"
 				}
-			} ),
+			}, globalUniforms.audio ),
 			defines: {
 				BLOOM_COUNT: this.bloomRenderCount.toString()
 			},
