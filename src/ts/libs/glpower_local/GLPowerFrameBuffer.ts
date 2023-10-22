@@ -69,11 +69,6 @@ export class GLPowerFrameBuffer {
 
 			t.attach( { width: this.size.x, height: this.size.y } );
 
-			this.gl.bindTexture( this.gl.TEXTURE_2D, t.getTexture() );
-			this.gl.texParameteri( this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR );
-			this.gl.texParameteri( this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR );
-			this.gl.bindTexture( this.gl.TEXTURE_2D, null );
-
 			const attachment = this.gl.COLOR_ATTACHMENT0 + i;
 			this.gl.framebufferTexture2D( this.gl.FRAMEBUFFER, attachment, this.gl.TEXTURE_2D, t.getTexture(), 0 );
 

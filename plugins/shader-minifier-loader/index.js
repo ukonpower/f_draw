@@ -3,7 +3,6 @@ var fs = require( 'fs' );
 
 const util = require( 'util' );
 const childProcess = require( 'child_process' );
-const { log } = require( "console" );
 const exec = util.promisify( childProcess.exec );
 
 module.exports = function shaderMinifier( userOptions = {} ) {
@@ -49,7 +48,7 @@ module.exports = function shaderMinifier( userOptions = {} ) {
 
 			if ( ! filter( id ) ) return;
 
-			if ( process.platform == "darwin" ) {
+			if ( process.platform == "darwin" || true ) {
 
 				return {
 					code: `export default ${JSON.stringify( code )};`,

@@ -68,8 +68,10 @@ export class Audio extends GLP.EventEmitter {
 
 		const devices = await navigator.mediaDevices.enumerateDevices();
 
-		const label = "BlackHole 2ch (Virtual)";
-		// label = "MacBook Proのマイク (Built-in)"
+		let label = "MacBook Proのマイク (Built-in)";
+		label = "BlackHole 2ch (Virtual)";
+		label = "CABLE Output (VB-Audio Virtual Cable)";
+		label = "VoiceMeeter Output (VB-Audio VoiceMeeter VAIO)";
 
 		const mic = devices.find( d => d.label.indexOf( label ) > - 1 );
 

@@ -56,21 +56,12 @@ export class GLPowerTexture {
 
 	}
 
-	public setting( param: Types.Nullable<GLPowerTextureSetting> ) {
+	public setting( param?: Types.Nullable<GLPowerTextureSetting> ) {
 
 		this._setting = {
 			...this._setting,
 			...param
 		};
-
-		this.gl.bindTexture( this.gl.TEXTURE_2D, this.texture );
-
-		this.gl.texParameteri( this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this._setting.magFilter );
-		this.gl.texParameteri( this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this._setting.minFilter );
-		this.gl.texParameterf( this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this._setting.wrapS );
-		this.gl.texParameterf( this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this._setting.wrapT );
-
-		this.gl.bindTexture( this.gl.TEXTURE_2D, null );
 
 		this.attach( this.image );
 
@@ -111,6 +102,11 @@ export class GLPowerTexture {
 			this.gl.generateMipmap( this.gl.TEXTURE_2D );
 
 		}
+
+		this.gl.texParameteri( this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this._setting.magFilter );
+		this.gl.texParameteri( this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this._setting.minFilter );
+		this.gl.texParameterf( this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this._setting.wrapS );
+		this.gl.texParameterf( this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this._setting.wrapT );
 
 		this.gl.bindTexture( this.gl.TEXTURE_2D, null );
 
