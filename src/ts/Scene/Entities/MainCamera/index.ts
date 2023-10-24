@@ -636,7 +636,7 @@ export class MainCamera extends MXP.Entity {
 		}
 
 		const fov = this.cameraComponent.fov;
-		const focusDistance = this.tmpVector1.sub( this.tmpVector2 ).length();
+		const focusDistance = this.tmpVector1.length();
 		const kFilmHeight = 0.012;
 		const flocalLength = 0.5 * kFilmHeight / Math.tan( 0.5 * ( fov / 180 * Math.PI ) );
 		const maxCoc = 1 / this.dofBokeh.renderTarget!.size.y * 4;

@@ -7,7 +7,7 @@ void main( void ) {
 
 	#include <frag_in>
 
-	vec4 n = texture( uNoiseTex, vUv / 10.0 + vPos.xy * 0.8 );
+	vec4 n = texture( uNoiseTex, vUv / 5.0 );
 
 	outRoughness = 0.15 + n.x;
 	outMetalic = 0.6;

@@ -61,7 +61,11 @@ void main( void ) {
 	// position.xyz += velocity.xyz;
 	position.x = fract(vUv.x * uGrid);
 	position.y = vUv.y;
-	position.z = floor(vUv.x * uGrid);
+	position.z = floor(vUv.x * uGrid) / uGrid;
+
+	position.xyz -= 0.5;
+	// position.xyz *= 10.0;
+	// position.xyz += 0.5;
 
 	// lifetime
 

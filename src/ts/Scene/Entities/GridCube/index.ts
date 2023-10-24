@@ -17,7 +17,7 @@ export class GridCube extends MXP.Entity {
 
 		super();
 
-		const res = 3;
+		const res = 16;
 
 		const count = new GLP.Vector( res * res, res );
 
