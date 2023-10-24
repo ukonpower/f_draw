@@ -3,27 +3,44 @@
 
 uniform sampler2D uAudioWaveTex;
 uniform sampler2D uAudioFreqTex;
+
+uniform sampler2D gpuSampler0;
+uniform sampler2D gpuSampler1;
+
 uniform float uGrid;
+uniform float uGridInv;
 
 layout (location=3) in vec3 instancePos;
-layout (location=4) in vec4 id;
+layout (location=4) in vec4 instanceId;
 layout (location=5) in vec3 instanceNormal;
+
+vec2 getGPUUV( vec3 index ) {
+
+	return vec2( uGridInv * uGridInv * index.x + uGridInv * index.z, index.y );
+	
+}
 
 void main( void ) {
 
 	#include <vert_in>
 
-	float audio = texture( uAudioFreqTex, vec2( id.x, id.y ) ).x;
+	// wave
+
+	float audio = texture( uAudioFreqTex, vec2( instanceId.x, instanceId.y ) ).x;
 	audio = pow( audio, 1.0 ) * 2.0;
-	// audio = smoothstep(  0.3, 0.8, audio);
 
-	float gridInv = 1.0 / uGrid;
+	outPos += instanceNormal * uGridInv / 2.0;
+	outPos *= 1.0 + abs( instanceNormal ) * audio * 0.0;
+	outPos -= instanceNormal * uGridInv / 2.0;
 
-	outPos += instanceNormal * gridInv / 2.0;
-	outPos *= 1.0 + abs( instanceNormal ) * audio * 25.0;
-	outPos -= instanceNormal * gridInv / 2.0;
+	// instance position
 
-	outPos += instancePos * 0.9;
+	// outPos += instancePos * 0.9;
+	vec2 gpuUv = getGPUUV( instanceId.xyz );
+	vec4 gpuPosition = texture( gpuSampler0, gpuUv ) - 0.5;
+	outPos += gpuPosition.xyz;
+
+	// outPos *= 0.2;
 	
 	#include <vert_out>
 

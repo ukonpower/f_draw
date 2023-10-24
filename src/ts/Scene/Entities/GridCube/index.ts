@@ -4,131 +4,92 @@ import * as MXP from 'maxpower';
 import gridCubeVert from './shaders/gridCube.vs';
 import gridCubeFrag from './shaders/gridCube.fs';
 
-import { globalUniforms } from '~/ts/Globals';
+import gridCubeCompute from './shaders/gridCubeCompute.glsl';
+
+import { gl, globalUniforms } from '~/ts/Globals';
+import { gridCubeInstance } from './instance';
 
 export class GridCube extends MXP.Entity {
+
+	private gpu: MXP.GPUComputePass;
 
 	constructor() {
 
 		super();
 
-		const res = 15;
+		const res = 3;
+
+		const count = new GLP.Vector( res * res, res );
+
+		const commonUnforms: GLP.Uniforms = {
+			uGrid: {
+				value: res,
+				type: "1f"
+			},
+			uGridInv: {
+				value: 1.0 / res,
+				type: "1f"
+			},
+		};
+
+		/*-------------------------------
+			GPU
+		-------------------------------*/
+
+		this.gpu = new MXP.GPUComputePass( gl, {
+			name: 'gpu/GridCube',
+			size: count,
+			layerCnt: 2,
+			frag: MXP.hotGet( "paraCompute", gridCubeCompute ),
+			uniforms: GLP.UniformsUtils.merge( globalUniforms.time, commonUnforms ),
+		} );
+
+		this.gpu.initTexture( ( l, x, y ) => {
+
+			if ( l == 0 ) {
+
+				return [ 0, 0, 0, Math.random() ];
+
+			} else {
+
+				return [ 0, 0, 0, Math.random() ];
+
+			}
+
+		} );
+
+		this.addComponent( "gpuCompute", new MXP.GPUCompute( { passes: [
+			this.gpu
+		] } ) );
+
+		/*-------------------------------
+			Geometry
+		-------------------------------*/
 
 		const geo = this.addComponent( "geometry", new MXP.CubeGeometry( 1 / res, 1 / res, 1 / res ) );
 
-		const positionArray = [];
-		const normalArray = [];
-		const idArray = [];
-
-		let c = 0;
-
-		for ( let i = 0; i < res; i ++ ) {
-
-			for ( let j = 0; j < res; j ++ ) {
-
-				positionArray.push(
-					i / ( res - 1 ) - 0.5,
-					j / ( res - 1 ) - 0.5,
-					0.5
-				);
-				normalArray.push(
-					0.0, 0.0, 1.0,
-				);
-				idArray.push(
-					Math.random(), Math.random(), c );
-
-				positionArray.push(
-					i / ( res - 1 ) - 0.5,
-					j / ( res - 1 ) - 0.5,
-					- 0.5
-				);
-				normalArray.push(
-					0.0, 0.0, - 1.0,
-				);
-				idArray.push( Math.random(), Math.random(), c );
-
-				c ++;
-
-			}
-
-		}
-
-		for ( let i = 0; i < res; i ++ ) {
-
-			for ( let j = 0; j < res; j ++ ) {
-
-				positionArray.push(
-					i / ( res - 1 ) - 0.5,
-					0.5,
-					j / ( res - 1 ) - 0.5,
-				);
-				normalArray.push(
-					0.0, 1.0, 0.0,
-				);
-				idArray.push( Math.random(), Math.random(), c );
-
-				positionArray.push(
-					i / ( res - 1 ) - 0.5,
-					- 0.5,
-					j / ( res - 1 ) - 0.5,
-				);
-				normalArray.push(
-					0.0, - 1.0, 0.0,
-				);
-				idArray.push( Math.random(), Math.random(), c );
-
-				c ++;
-
-			}
-
-		}
-
-		for ( let i = 0; i < res; i ++ ) {
-
-			for ( let j = 0; j < res; j ++ ) {
-
-				positionArray.push(
-					0.5,
-					i / ( res - 1 ) - 0.5,
-					j / ( res - 1 ) - 0.5,
-				);
-				normalArray.push(
-					1.0, 0.0, 0.0,
-				);
-				idArray.push( Math.random(), Math.random(), c );
-
-				positionArray.push(
-					- 0.5,
-					i / ( res - 1 ) - 0.5,
-					j / ( res - 1 ) - 0.5,
-				);
-				normalArray.push(
-					- 1.0, 0.0, 0.0,
-				);
-				idArray.push( Math.random(), Math.random(), c );
-
-				c ++;
-
-			}
-
-		}
+		const { positionArray, normalArray, idArray, randomArray } = gridCubeInstance( res );
 
 		geo.setAttribute( "instancePos", new Float32Array( positionArray ), 3, { instanceDivisor: 1 } );
 		geo.setAttribute( "instanceNormal", new Float32Array( normalArray ), 3, { instanceDivisor: 1 } );
-		geo.setAttribute( "id", new Float32Array( idArray ), 3, { instanceDivisor: 1 } );
+		geo.setAttribute( "instanceId", new Float32Array( idArray ), 4, { instanceDivisor: 1 } );
+		geo.setAttribute( "instanceRandom", new Float32Array( randomArray ), 3, { instanceDivisor: 1 } );
+
+		/*-------------------------------
+			Material
+		-------------------------------*/
 
 		const mat = this.addComponent( "material", new MXP.Material( {
 			name: "gridCube",
 			type: [ "deferred", "shadowMap" ],
-			uniforms: GLP.UniformsUtils.merge( globalUniforms.time, globalUniforms.audio, globalUniforms.tex, {
-				uGrid: {
-					value: res,
-					type: "1f"
-				},
-			} ),
+			uniforms: GLP.UniformsUtils.merge( globalUniforms.time, globalUniforms.audio, globalUniforms.tex, this.gpu.outputUniforms, commonUnforms ),
 			vert: MXP.hotGet( 'gridCubeVert', gridCubeVert ),
 			frag: MXP.hotGet( 'gridCubeFrag', gridCubeFrag ),
 		} ) );
+
+		/*-------------------------------
+			Hot
+		-------------------------------*/
 
 		if ( import.meta.hot ) {
 
@@ -153,6 +114,18 @@ export class GridCube extends MXP.Entity {
 				}
 
 				mat.requestUpdate();
+
+			} );
+
+			import.meta.hot.accept( "./shaders/gridCubeCompute.glsl", ( module ) => {
+
+				if ( module ) {
+
+					this.gpu.frag = MXP.hotUpdate( 'gridCubeCompute', module.default );
+
+				}
+
+				this.gpu.requestUpdate();
 
 			} );
 
