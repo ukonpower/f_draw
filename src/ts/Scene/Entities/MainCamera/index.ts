@@ -111,7 +111,7 @@ export class MainCamera extends MXP.Entity {
 
 		this.lookAt = this.addComponent( 'lookAt', new LookAt() );
 		// this.addComponent( 'orbitControls', new OrbitControls( canvas ) );
-		this.addComponent( 'shakeViewer', new ShakeViewer( 0.3, 1.0 ) );
+		this.addComponent( 'shakeViewer', new ShakeViewer( 1.5, 1.0 ) );
 		// this.addComponent( 'rotateViewer', new RotateViewer( 5.0 ) );
 
 		// resolution

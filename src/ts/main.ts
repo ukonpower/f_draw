@@ -127,7 +127,7 @@ class App {
 
 	private resize() {
 
-		const aspect = 16 / 7;
+		const aspect = 16 / 8;
 		const scale = 0.5;
 
 		this.canvas.width = 1920 * scale;
