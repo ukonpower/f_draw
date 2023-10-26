@@ -46,10 +46,8 @@ class App {
 		this.canvas = canvas;
 		this.canvasWrapElm.appendChild( this.canvas );
 
-
 		this.canvasWrapElm.style.display = 'block';
 		this.canvasWrapElm.style.cursor = 'none';
-
 
 		/*-------------------------------
 			Scene
