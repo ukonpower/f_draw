@@ -27,8 +27,9 @@ let entityCount: number = 0;
 
 export class Entity extends GLP.EventEmitter {
 
+	public readonly uuid: number;
+
 	public name: string;
-	public uuid: number;
 
 	public position: GLP.Vector;
 	public quaternion: GLP.Quaternion;

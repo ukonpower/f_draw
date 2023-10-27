@@ -17,6 +17,7 @@ export * from './Math/Matrix';
 
 // animation
 
+export * from './Animation/Animator';
 export * from './Animation/Bezier';
 export * from './Animation/Easings';
 export * from './Animation/FCurve';

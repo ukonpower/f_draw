@@ -3,8 +3,8 @@ import * as MXP from 'maxpower';
 
 export class MIDIMIX extends GLP.EventEmitter {
 
-	public input!: MIDIInput;
-	public output!: MIDIOutput;
+	public input: MIDIInput | null;
+	public output: MIDIOutput | null;
 
 	public values: GLP.Vector[];
 
@@ -18,6 +18,9 @@ export class MIDIMIX extends GLP.EventEmitter {
 		// values
 
 		this.values = [];
+
+		this.input = null;
+		this.output = null;
 
 		for ( let i = 0; i < 8; i ++ ) {
 
@@ -59,15 +62,39 @@ export class MIDIMIX extends GLP.EventEmitter {
 
 			} );
 
+			// init
+
 			this.updateLight();
-			this.emit( "row1", [ this.row1 ] );
-			this.emit( "row2", [ this.row2 ] );
+			this.pushRow1( this.row1 );
+			this.pushRow2( this.row2 );
 
 			for ( let i = 0; i < 8; i ++ ) {
 
 				this.emit( "value/" + i, [ this.values[ i ] ] );
 
 			}
+
+		} );
+
+		// keyboard simulator
+
+		const onKeyDown = ( e: KeyboardEvent ) => {
+
+			const num = Number( e.key );
+
+			if ( ! Number.isNaN( num ) ) {
+
+				this.pushRow1( num );
+
+			}
+
+		};
+
+		window.addEventListener( 'keydown', onKeyDown );
+
+		this.once( "dispose", () => {
+
+			window.removeEventListener( "keydown", onKeyDown );
 
 		} );
 
@@ -123,16 +150,11 @@ export class MIDIMIX extends GLP.EventEmitter {
 
 			if ( ( id + 2 ) % 3 == 0 ) {
 
-				this.row1 = num;
-
-				this.emit( "row1", [ this.row1 ] );
-
+				this.pushRow1( num );
 
 			} else {
 
-				this.row2 = num - 1;
-
-				this.emit( "row2", [ this.row2 ] );
+				this.pushRow2( num - 1 );
 
 			}
 
@@ -142,7 +164,25 @@ export class MIDIMIX extends GLP.EventEmitter {
 
 	}
 
+	public pushRow1( index: number ) {
+
+		this.row1 = index;
+
+		this.emit( "row1", [ this.row1 ] );
+
+	}
+
+	public pushRow2( index: number ) {
+
+		this.row2 = index;
+
+		this.emit( "row2", [ this.row2 ] );
+
+	}
+
 	private updateLight() {
+
+		if ( ! this.output ) return;
 
 		for ( let i = 0; i < 8; i ++ ) {
 
@@ -158,6 +198,12 @@ export class MIDIMIX extends GLP.EventEmitter {
 
 		this.output.send( [ 0x90, 1 + ( this.row1 ) * 3.0, 127 ] );
 		this.output.send( [ 0x90, ( this.row2 + 1 ) * 3.0, 127 ] );
+
+	}
+
+	public dispose() {
+
+		this.emit( "dispose" );
 
 	}
 

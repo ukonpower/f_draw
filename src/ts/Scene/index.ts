@@ -1,13 +1,15 @@
 import * as GLP from 'glpower';
 import * as MXP from 'maxpower';
 
-import { audio, gl, globalUniforms, power } from '../Globals';
+import { animator, audio, gl, globalUniforms, midimix, power } from '../Globals';
 
 import { MainCamera } from './Entities/MainCamera';
 import { Renderer } from './Renderer';
 import { createTextures } from './Textures';
 import { Common } from './Phase/Common';
 import { Phase1 } from './Phase/Phase1';
+import { Phase2 } from './Phase/Phase2';
+import { Phase0 } from './Phase/Phase0';
 
 type SceneUpdateParam = {
 	forceDraw: boolean
@@ -75,8 +77,16 @@ export class Scene extends GLP.EventEmitter {
 
 		this.root.add( new Common() );
 
-		const phase = new Phase1();
-		this.root.add( phase );
+		const phase0 = new Phase0();
+		this.root.add( phase0 );
+
+		const phase1 = new Phase1();
+		this.root.add( phase1 );
+
+		const phase2 = new Phase2();
+		this.root.add( phase2 );
+
+		midimix.pushRow1( 0 );
 
 		// renderer
 
@@ -101,6 +111,8 @@ export class Scene extends GLP.EventEmitter {
 			deltaTime: this.deltaTime,
 			forceDraw: param && param.forceDraw
 		};
+
+		animator.update( this.deltaTime );
 
 		audio.update( this.deltaTime );
 

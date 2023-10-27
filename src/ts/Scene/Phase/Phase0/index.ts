@@ -4,11 +4,11 @@ import * as MXP from 'maxpower';
 import { Phase } from '..';
 import { GridCube } from '../../Entities/GridCube';
 
-export class Phase1 extends Phase {
+export class Phase0 extends Phase {
 
 	constructor() {
 
-		super( 1 );
+		super( 0 );
 
 		const box = new GridCube();
 		this.add( box );

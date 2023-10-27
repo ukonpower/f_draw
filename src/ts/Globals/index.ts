@@ -1,10 +1,13 @@
 import * as GLP from 'glpower';
+import { Audio } from '../libs/Audio';
+import { MIDIMIX } from '../libs/MIDIMIX';
 
 export const canvas = document.createElement( "canvas" );
 export const gl = canvas.getContext( 'webgl2' )!;
+export const animator = new GLP.Animator();
 export const power = new GLP.Power( gl );
 export const audio = new Audio();
-export const midi = new MIDIMIX();
+export const midimix = new MIDIMIX();
 export const globalUniforms: {[key: string]: GLP.Uniforms} = {
 	time: {
 		uTime: {
@@ -60,7 +63,4 @@ import { GPUState } from '../libs/GPUState';
 export let gpuState: GPUState | undefined = undefined;
 
 import 'webgl-memory';
-import { Audio } from '../libs/Audio';
-import { MIDI } from '../libs/MIDI';
-import { MIDIMIX, MIDIMIX } from '../libs/MIDIMIX';
 gpuState = new GPUState();
