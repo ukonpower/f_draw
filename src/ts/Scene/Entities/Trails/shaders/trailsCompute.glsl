@@ -16,60 +16,58 @@ in vec2 vUv;
 
 void main( void ) {
 
-	float t = uTime * 1.0;
-	float id = vUv.y;
+	float t = uTime * 0.8;
+	float id = ( vUv.x * uGPUResolution.x + vUv.y ) / uGPUResolution.x;
+	vec2 pixel = 1.0 / uGPUResolution;
 
 	vec4 position = texture( gpuSampler0, vUv );
 	vec4 velocity = texture( gpuSampler1, vUv );
 
-	float pixelX = 1.0 / uGPUResolution.x;
+	float head = vUv.x < pixel.x ? 1.0 : 0.0;
 
-	// velocity
+	vec3 noisePosition = position.xyz * ( 0.20 + ( 1.0 - head ) * 0.1 ) + vUv.y * 0.35;
+	vec3 noise = fbm3( noisePosition + uTime * ( 0.5 + head * 0.5 ) ) - 0.45;
 
-	if( vUv.x < pixelX ) {
-	
-		float posOffset = id;
-		float tOffset = t + id * 0.1;
+	if( vUv.x < pixel.x ) {
 
-		vec3 pos = position.xyz;
-		vec3 np = pos * 0.3;
+		// velocity
 
-		vec3 noise = vec3(
-			snoise4D( vec4( np, tOffset) ),
-			snoise4D( vec4( np + 123.4, tOffset) ),
-			snoise4D( vec4( np + 567.8, tOffset) )
-		) * 0.002;
+		noise = noise * 0.03;
+		velocity.xyz *= 0.99;
+		velocity.xyz += noise; 
 
-		velocity.xyz += noise;
+		float r = (1.0) * 0.0004 ;
 
-		velocity.xyz += smoothstep( 0.0, 5.0, length( pos ) ) * - pos * 0.002;
-		velocity.xyz *= 0.98;
+		float dir = atan2( position.z, position.x );
+		velocity.x += sin( dir ) * r;
+		velocity.z += -cos( dir ) * r;
 
-	}
-	
-	//  position
+		vec3 gravity = vec3( 0.00001 );
 
-	if( vUv.x < pixelX ) {
+		vec3 gPos = vec3( 0.0 );
+		gPos = position.xyz + vec3( 0.0, 0.0, 0.0 );
+		gravity += gPos.xyz * smoothstep( 0.0, 0.001, length( gPos.xyz ) ) * -vec3(0.002);
+		velocity.xyz += gravity;
+
+		if( length( velocity.xyz ) > 0.15 ) {
+
+			velocity.xyz = normalize( velocity.xyz ) * 0.15;
+
+		}
+
+		//  position
 
 		position.xyz += velocity.xyz;
-		
+
 	} else {
 
-		position.xyz = texture( gpuSampler0, vUv - vec2( pixelX * 1.5, 0.0 ) ).xyz;
+		vec4 prevPos = texture( gpuSampler1, vUv - vec2( pixel.x, 0.0 ) );
+		vec3 diff = position.xyz - prevPos.xyz;
+
+		position.xyz = mix( position.xyz, texture( gpuSampler0, vUv - vec2( pixel.x, 0.0 ) ).xyz, 0.9 );
+		position.xyz += noise * 0.035;
 		
 	}
-
-	// lifetime
-
-	if( position.w > 1.0 ) {
-	
-		// position = vec4( 5.0, 0.0, 0.0, 0.0 );
-		// position.xz *= rotate( vUv.x * TPI * 20.0 - uTime * 0.02 );
-		// velocity = vec4( 0.0 );
-
-	}
-
-	position.w += 0.016 / 10.0;
 
 	// out
 

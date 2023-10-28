@@ -7,7 +7,10 @@ void main( void ) {
 
 	#include <vert_in>
 
-	float w = texture( uAudioWaveTex, uv * vec2( 0.1, 0.0) ).x - 0.5;
+	vec2 v = uv;
+	v.x = 1.0 - v.x;
+
+	float w = texture( uAudioWaveTex, v * vec2( 0.2, 0.0) ).x - 0.5;
 	outPos.x *= 12.0;
 	outPos.y *= 0.01 + abs( w ) * 5.0;
 	outPos.y += (w) * 5.0;

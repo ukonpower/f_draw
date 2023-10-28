@@ -1,12 +1,13 @@
 #include <common>
 #include <vert_h>
 
-layout (location = 3) in vec2 trailId;
-layout (location = 4) in vec3 id;
-layout (location = 5) in float posY;
+layout ( location = 3 ) in float posY;
+layout ( location = 4 ) in vec3 id;
 
-uniform sampler2D gpuSampler0;
-uniform sampler2D gpuSampler1;
+out vec3 vId;
+
+uniform sampler2D uComPosBuf;
+uniform sampler2D uComVelBuf;
 uniform vec2 uGPUResolution;
 
 #include <rotate>
@@ -15,18 +16,16 @@ void main( void ) {
 
 	#include <vert_in>
 
-	float uid = id.x + id.y * 128.0;
-
-	vec4 comPosBuffer = texture( gpuSampler0, vec2( posY * 1.0, trailId ) );
-	vec4 comVelBuffer = texture( gpuSampler1, vec2( posY * 1.0, trailId ) );
-    vec4 nextPosBuffer = texture( gpuSampler0, vec2( posY - 1.0 / uGPUResolution.x, trailId ) );
-
+	vec4 comPosBuffer = texture( uComPosBuf, vec2( posY * 1.0, id.x ) );
+	vec4 comVelBuffer = texture( uComVelBuf, vec2( posY * 1.0, id.x ) );
+    vec4 nextPosBuffer = texture( uComPosBuf, vec2( posY - 1.0 / uGPUResolution.x, id.x ) );
+	
 	vec3 offsetPosition = comPosBuffer.xyz;
-
-	outPos.xz *= sin( trailId * TPI.0 ) * 0.5 + 0.5;
 	
     vec3 delta = ( comPosBuffer.xyz - nextPosBuffer.xyz );
 	vec3 vec = normalize( delta );
+
+	outPos.xz *= ( 0.4 );
 
 	mat2 offsetRot = rotate( PI / 2.0 );
 	outPos.yz *= offsetRot;
@@ -37,6 +36,8 @@ void main( void ) {
 	outNormal *= rot;
 
 	outPos += offsetPosition;
+
+	vId = id;
 
 	#include <vert_out>
 	

@@ -67,17 +67,19 @@ export class Phase extends MXP.Entity {
 
 	protected phaseChange( phase: number ) {
 
+		const d = .5;
+
 		if ( this.phaseNumber == phase ) {
 
 			this.visible = true;
 
-			animator.animate( this.phaseId, 1, 5, () => {
+			animator.animate( this.phaseId, 1, 5 * d, () => {
 
 			} );
 
 		} else {
 
-			animator.animate( this.phaseId, 0, 5, () => {
+			animator.animate( this.phaseId, 0, 5 * d, () => {
 
 				this.visible = false;
 

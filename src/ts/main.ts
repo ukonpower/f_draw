@@ -20,9 +20,12 @@ class App {
 
 		document.body.innerHTML = `
 			<style>
-				body{margin:0;}
+				body{
+					margin:0;
+					background-color: #000;
+				}
 				button{display:block;width:200px;margin:0 auto 10px auto;padding:10px;border:1px solid #fff;background:none;color:#fff;cursor:pointer;}
-				canvas{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);}
+				canvas{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#000;opacity:0;}
 				.r{width:100%;height:100%;position:relative;overflow:hidden;display:flex;background:#000;}
 				.cw{position:relative;flex:1 1 100%;display:none;}
 				.s{width:100vw;height:100vh;display:flex;flex-direction:column;justify-content:center;}
@@ -121,12 +124,14 @@ class App {
 		this.resize();
 		this.animate();
 
+		this.canvas.style.opacity = "1";
+
 	}
 
 	private resize() {
 
 		const aspect = 16 / 8;
-		const scale = 0.5;
+		const scale = 1.0;
 
 		this.canvas.width = 1920 * scale;
 		this.canvas.height = this.canvas.width / aspect;

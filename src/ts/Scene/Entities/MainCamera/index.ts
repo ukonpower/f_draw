@@ -1,7 +1,7 @@
 import * as GLP from 'glpower';
 import * as MXP from 'maxpower';
 
-import { gl, globalUniforms, power } from "~/ts/Globals";
+import { gl, globalUniforms, midi, power } from "~/ts/Globals";
 import { LookAt } from '../../Components/LookAt';
 
 import fxaaFrag from './shaders/fxaa.fs';
@@ -525,7 +525,7 @@ export class MainCamera extends MXP.Entity {
 
 		this.composite = new MXP.PostProcessPass( {
 			name: 'composite',
-			frag: compositeFrag,
+			frag: MXP.hotUpdate( "composite", compositeFrag ),
 			uniforms: GLP.UniformsUtils.merge( this.commonUniforms, {
 				uBloomTexture: {
 					value: this.rtBloomHorizonal.map( rt => rt.textures[ 0 ] ),
@@ -546,6 +546,22 @@ export class MainCamera extends MXP.Entity {
 			renderTarget: null
 		} );
 
+		if ( import.meta.hot ) {
+
+			import.meta.hot.accept( "./shaders/composite.fs", ( module ) => {
+
+				if ( module ) {
+
+					this.composite.frag = module.default;
+
+				}
+
+				this.composite.requestUpdate();
+
+
+			} );
+
+		}
 
 		this.addComponent( "postprocess", new MXP.PostProcess( {
 			input: param.renderTarget.forwardBuffer.textures,

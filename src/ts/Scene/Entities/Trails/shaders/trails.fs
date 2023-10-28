@@ -2,19 +2,21 @@
 #include <packing>
 #include <frag_h>
 
-#include <re>
-
 uniform vec3 cameraPosition;
-uniform vec2 uResolution;
-uniform float uAspectRatio;
-
+uniform sampler2D uNoiseTex;
 
 void main( void ) {
 
 	#include <frag_in>
 
-	outColor = vec4( 1.0 );
+	float dnv = dot( normalize( vViewNormal ), normalize( -vMVPosition ) );
+	vec4 n = texture( uNoiseTex, vUv * 1.0 );
 	
+
+	outColor.xyz =  vec3( 1.0 );
+	// outEmission += ( 1.0 - dnv * 0.7 ) * vec3( 1.0, 0.6, 0.0 ) * 1.9;
+	outRoughness *= 0.1;
+
 	#include <frag_out>
 
 } 

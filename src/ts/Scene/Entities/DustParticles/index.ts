@@ -1,13 +1,12 @@
 import * as GLP from 'glpower';
+import * as MXP from 'maxpower';
 
 import { gl, globalUniforms } from '~/ts/Globals';
 
 import dustParticlesVert from './shaders/dustParticles.vs';
 import dustParticlesFrag from './shaders/dustParticles.fs';
-import { hotGet, hotUpdate } from '~/ts/libs/glpower_local/Framework/Utils/Hot';
-import { Entity } from 'maxpower/Entity';
 
-export class DustParticles extends Entity {
+export class DustParticles extends MXP.Entity {
 
 	constructor() {
 
@@ -31,13 +30,13 @@ export class DustParticles extends Entity {
 
 		}
 
-		const geo = this.addComponent( "geometry", new GLP.Geometry() );
+		const geo = this.addComponent( "geometry", new MXP.Geometry() );
 		geo.setAttribute( "position", new Float32Array( positionArray ), 3 );
 		geo.setAttribute( "size", new Float32Array( sizeArray ), 1 );
 
 		// mat
 
-		const mat = this.addComponent( "material", new GLP.Material( {
+		const mat = this.addComponent( "material", new MXP.Material( {
 			type: [ "forward" ],
 			uniforms: GLP.UniformsUtils.merge( globalUniforms.time, {
 				uRange: {
@@ -45,8 +44,8 @@ export class DustParticles extends Entity {
 					type: "3f"
 				}
 			} ),
-			vert: hotGet( 'dustParticlesVert', dustParticlesVert ),
-			frag: hotGet( 'dustParticlesFrag', dustParticlesFrag ),
+			vert: MXP.hotGet( 'dustParticlesVert', dustParticlesVert ),
+			frag: MXP.hotGet( 'dustParticlesFrag', dustParticlesFrag ),
 			drawType: gl.POINTS
 		} ) );
 
@@ -56,13 +55,13 @@ export class DustParticles extends Entity {
 
 				if ( module[ 0 ] ) {
 
-					mat.vert = hotUpdate( 'dustParticlesVert', module[ 0 ].default );
+					mat.vert = MXP.hotUpdate( 'dustParticlesVert', module[ 0 ].default );
 
 				}
 
 				if ( module[ 1 ] ) {
 
-					mat.frag = hotUpdate( 'dustParticlesFrag', module[ 1 ].default );
+					mat.frag = MXP.hotUpdate( 'dustParticlesFrag', module[ 1 ].default );
 
 				}
 

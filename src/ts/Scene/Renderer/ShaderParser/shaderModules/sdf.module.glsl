@@ -61,6 +61,12 @@ float sdRoundedCylinder( vec3 p, float ra, float rb, float h )
   return min(max(d.x,d.y),0.0) + length(max(d,0.0)) - rb;
 }
 
+float sdRoundBox( vec3 p, vec3 b, float r )
+{
+  vec3 q = abs(p) - b;
+  return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0) - r;
+}
+
 float sdOctahedron( vec3 p, float s)
 {
   p = abs(p);

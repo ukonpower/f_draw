@@ -33,15 +33,17 @@ void main( void ) {
 	float audio = texture( uAudioFreqTex, vec2( instanceRandom.x, 0.0 ) ).x;
 	audio = pow( audio, 1.0 ) * 2.0;
 
-	outPos.xyz *= 1.0 + audio * 3.0;
+	outPos.xyz *= 1.0 + audio * 2.0;
 	outPos += instanceNormal * uGridInv / 2.0;
-	// outPos *= 1.0 + abs( instanceNormal ) * audio * 10.0 * smoothstep( 1.25, 0.9, length( gpuPosition ) ) * 4.0;
+	outPos *= 1.0 + abs( instanceNormal ) * audio * 10.0 * smoothstep( 1.25, 0.9, length( gpuPosition ) ) * 1.0;
 	outPos -= instanceNormal * uGridInv / 2.0;
 
 	// instance position
 
 	outPos += gpuPosition.xyz * 1.0;
-	outPos += instanceNormal * ( 0.0 + audio * 0.8 );
+	outPos += instanceNormal * ( 0.0 + audio * 0.9 );
+
+	outPos *= 0.5;
 
 	// outPos *= 0.2;
 	

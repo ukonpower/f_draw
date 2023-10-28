@@ -3,6 +3,8 @@ import * as MXP from 'maxpower';
 import { Skybox } from '../../Entities/Skybox';
 import { AudioWave } from '../../Entities/AudioWave';
 import { Lights } from './Lights/inded';
+import { DustParticles } from '../../Entities/DustParticles';
+import { Trails } from '../../Entities/Trails';
 
 export class Common extends MXP.Entity {
 
@@ -18,9 +20,15 @@ export class Common extends MXP.Entity {
 		const skybox = new Skybox();
 		this.add( skybox );
 
-		const aw = new AudioWave();
-		aw.position.z = - 2;
-		this.add( aw );
+		const dust = new DustParticles();
+		this.add( dust );
+
+		const wave = new AudioWave();
+		wave.position.z = - 2;
+		this.add( wave );
+
+		const trail = new Trails();
+		this.add( trail );
 
 	}
 
