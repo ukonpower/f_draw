@@ -6,12 +6,14 @@ import { FluidParticles } from '~/ts/Scene/Entities/FluidParticles';
 
 export class Effect1 extends Part {
 
+	private particles: FluidParticles;
+
 	constructor() {
 
 		super( 5 );
 
-		const trail = new FluidParticles();
-		this.add( trail );
+		this.particles = new FluidParticles();
+		this.add( this.particles );
 
 	}
 
@@ -19,7 +21,7 @@ export class Effect1 extends Part {
 
 		super.updateImpl( event );
 
-		this.emit( 'update' );
+		this.particles.trailVisibility = this.switcher.visibility;
 
 	}
 

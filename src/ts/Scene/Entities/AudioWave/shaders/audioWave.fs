@@ -7,7 +7,7 @@ void main( void ) {
 
 	#include <frag_in>
 
-	outEmission += 1.0 * vUv.y;
+	outEmission += smoothstep( 0.0, 0.5, abs( vUv.y - 0.5 ) );
 	outEmission *= uMidi.z;
 	
 	#include <frag_out>

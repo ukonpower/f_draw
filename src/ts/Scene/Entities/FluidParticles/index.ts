@@ -11,6 +11,7 @@ import fluidParticlesCompute from './shaders/fluidParticlesCompute.glsl';
 export class FluidParticles extends MXP.Entity {
 
 	private gpu: MXP.GPUComputePass;
+	private commonUniforms: GLP.Uniforms;
 
 	constructor() {
 
@@ -18,7 +19,7 @@ export class FluidParticles extends MXP.Entity {
 
 		const count = new GLP.Vector( 128, 128 );
 
-		const commonUniforms: GLP.Uniforms = GLP.UniformsUtils.merge( {
+		this.commonUniforms = GLP.UniformsUtils.merge( {
 			uMidi: {
 				value: midimix.vectorsLerped[ 5 ],
 				type: '4fv'
@@ -26,6 +27,10 @@ export class FluidParticles extends MXP.Entity {
 			uPause: {
 				value: 0,
 				type: '1f'
+			},
+			uVisibility: {
+				value: 0,
+				type: "1f"
 			}
 		}, globalUniforms.audio );
 
@@ -40,7 +45,7 @@ export class FluidParticles extends MXP.Entity {
 
 		midimix.on( "row2/5", () => {
 
-			commonUniforms.uPause.value = 1.0 - commonUniforms.uPause.value;
+			this.commonUniforms.uPause.value = 1.0 - this.commonUniforms.uPause.value;
 
 		} );
 
@@ -53,7 +58,7 @@ export class FluidParticles extends MXP.Entity {
 			size: count,
 			layerCnt: 2,
 			frag: MXP.hotGet( 'fluidParticlesCompute', fluidParticlesCompute ),
-			uniforms: GLP.UniformsUtils.merge( globalUniforms.time, commonUniforms ),
+			uniforms: GLP.UniformsUtils.merge( globalUniforms.time, this.commonUniforms ),
 		} );
 
 		this.gpu.initTexture( ( l, x, y ) => {
@@ -95,7 +100,7 @@ export class FluidParticles extends MXP.Entity {
 		const mat = this.addComponent( "material", new MXP.Material( {
 			name: "fluid",
 			type: [ "deferred", "shadowMap" ],
-			uniforms: GLP.UniformsUtils.merge( globalUniforms.time, globalUniforms.resolution, commonUniforms, this.gpu.outputUniforms, {
+			uniforms: GLP.UniformsUtils.merge( globalUniforms.time, globalUniforms.resolution, this.commonUniforms, this.gpu.outputUniforms, {
 			} ),
 			vert: MXP.hotGet( 'fluidParticlesVert', fluidParticlesVert ),
 			frag: MXP.hotGet( 'fluidParticlesFrag', fluidParticlesFrag ),
@@ -133,6 +138,12 @@ export class FluidParticles extends MXP.Entity {
 			} );
 
 		}
+
+	}
+
+	public set trailVisibility( value: number ) {
+
+		this.commonUniforms.uVisibility.value = value;
 
 	}
 

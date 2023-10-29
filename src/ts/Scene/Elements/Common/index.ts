@@ -24,6 +24,7 @@ export class Common extends MXP.Entity {
 		this.add( dust );
 
 		const wave = new AudioWave();
+		wave.scale.set( 20.0, 20.0, 20.0 );
 		this.add( wave );
 
 		this.wireCube = new CubeWire();

@@ -12,7 +12,7 @@ export class AudioWave extends MXP.Entity {
 
 		super();
 
-		this.addComponent( "geometry", new MXP.CylinderGeometry( 20.0, 20.0, 1.0, audio.size, 1, false ) );
+		this.addComponent( "geometry", new MXP.CylinderGeometry( 1.0, 1.0, 1.0, audio.size, 3, false ) );
 
 		const mat = this.addComponent( "material", new MXP.Material( {
 			name: "audioWave",
