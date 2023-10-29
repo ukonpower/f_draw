@@ -2,7 +2,7 @@ import * as MXP from 'maxpower';
 
 import * as GLP from 'glpower';
 
-import { gl, globalUniforms, midimix } from '~/ts/Globals';
+import { gl, globalUniforms, midimix, mpkmini } from '~/ts/Globals';
 
 import fluidParticlesVert from './shaders/fluidParticles.vs';
 import fluidParticlesFrag from './shaders/fluidParticles.fs';
@@ -17,11 +17,15 @@ export class FluidParticles extends MXP.Entity {
 
 		super();
 
-		const count = new GLP.Vector( 128, 128 );
+		const count = new GLP.Vector( 256, 256 );
 
 		this.commonUniforms = GLP.UniformsUtils.merge( {
 			uMidi: {
 				value: midimix.vectorsLerped[ 5 ],
+				type: '4fv'
+			},
+			uMidi2: {
+				value: mpkmini.vectorsLerped[ 1 ],
 				type: '4fv'
 			},
 			uPause: {
