@@ -3,11 +3,12 @@ import { Skybox } from '../../Entities/Skybox';
 import { AudioWave } from '../../Entities/AudioWave';
 import { Lights } from './Lights/inded';
 import { DustParticles } from '../../Entities/DustParticles';
-import { Trails } from '../../Entities/Trails';
+import { CubeWire } from '../../Entities/CubeWire';
 
 export class Common extends MXP.Entity {
 
 	private lights: Lights;
+	private wireCube: CubeWire;
 
 	constructor() {
 
@@ -24,6 +25,11 @@ export class Common extends MXP.Entity {
 
 		const wave = new AudioWave();
 		this.add( wave );
+
+		this.wireCube = new CubeWire();
+		this.wireCube.scale.set( 5.0, 5.0, 5.0 );
+		this.add( this.wireCube );
+
 
 
 	}

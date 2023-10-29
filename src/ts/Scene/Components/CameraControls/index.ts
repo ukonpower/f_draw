@@ -1,13 +1,13 @@
 import * as GLP from 'glpower';
 import * as MXP from 'maxpower';
-import { bpm, midimix, mpkmini } from '~/ts/Globals';
+import { animator, bpm, midimix, mpkmini } from '~/ts/Globals';
 
 /*
 MODE
-0 - 中央
-1 - 並行移動
-2 - 左右
-3 - 静止
+0 - 静止
+1 - 中央
+2 - 並行移動
+3 - 爆
 */
 
 export class CameraControls extends MXP.Component {
@@ -75,6 +75,9 @@ export class CameraControls extends MXP.Component {
 
 		this.move( 0 );
 
+		animator.add( "cameraPos", new GLP.Vector(), GLP.Easings.easeInOutCubic );
+		animator.add( "cameraTarget", new GLP.Vector(), GLP.Easings.easeInOutCubic );
+
 		/*-------------------------------
 			BPM
 		-------------------------------*/
@@ -124,7 +127,21 @@ export class CameraControls extends MXP.Component {
 		if ( this.mode == 0.0 ) {
 
 			/*-------------------------------
-				Mode0
+				Mode0 静止
+			-------------------------------*/
+
+			const d = 0.5 + this.spawnDistance * 4.0;
+
+			this.selfPos.set( 0, 0, d );
+			this.targetPos.set( 0, 0, 0 );
+
+			this.selfVel.set( 0, 0, 0 );
+			this.targetVel.set( 0, 0, 0 );
+
+		} else if ( this.mode == 1.0 ) {
+
+			/*-------------------------------
+				Mode1 中心
 			-------------------------------*/
 
 			const selfRadius = 0.2 + ( this.spawnDistance * 2.0 );
@@ -136,18 +153,16 @@ export class CameraControls extends MXP.Component {
 				Math.sin( selfRadian ) * selfRadius,
 			).multiply( w );
 
-			console.log( this.cameraSpeed );
-
 			this.selfVel.set( 0, ( Math.random() - 0.5 ) * this.cameraSpeed * 5.0, 0 );
 
 			this.targetPos.set( 0, 0, 0 );
 			this.targetVel.set( 0, 0.0, 0 );
 
 
-		} else if ( this.mode == 1.0 ) {
+		} else if ( this.mode == 2.0 ) {
 
 			/*-------------------------------
-				Mode1
+				Mode2 平行移動
 			-------------------------------*/
 
 			const selfRadius = 0.5 + Math.random() * 0.2 + ( this.spawnDistance * 4.0 );
@@ -182,16 +197,29 @@ export class CameraControls extends MXP.Component {
 				Math.random() - 0.5,
 			).normalize().multiply( 0.2 );
 
-		} else if ( this.mode == 2.0 ) {
 		} else if ( this.mode == 3.0 ) {
 
-			const d = 0.5 + this.spawnDistance * 4.0;
+			/*-------------------------------
+				Mode3 爆
+			-------------------------------*/
 
-			this.selfPos.set( 0, 0, d );
-			this.targetPos.set( 0, 0, 0 );
+			const selfRadius = 0.5 + Math.random() * 0.2 + ( this.spawnDistance * 4.0 );
+			const selfRadian = Math.random() * Math.PI * 2.0;
 
-			this.selfVel.set( 0, 0, 0 );
-			this.targetVel.set( 0, 0, 0 );
+			animator.animate( "cameraPos", new GLP.Vector(
+				Math.cos( selfRadian ) * selfRadius,
+				Math.random() - 0.5,
+				Math.sin( selfRadian ) * selfRadius,
+			), 0.1 );
+
+			const targetRadius = Math.random() * w * 0.4;
+			const targetRadian = Math.random() * Math.PI * 2.0;
+
+			animator.animate( "cameraTarget", new GLP.Vector(
+				Math.cos( targetRadian ) * targetRadius,
+				( Math.random() - 0.5 ) * targetRadius,
+				Math.sin( targetRadian ) * targetRadius,
+			), 0.1 );
 
 		}
 
@@ -207,26 +235,33 @@ export class CameraControls extends MXP.Component {
 
 		if ( this.mode == 0 ) {
 
-			this.tmpQuaternion.setFromEuler( this.tmpVec1.copy( this.selfVel ).multiply( event.deltaTime ) );
 
-			this.selfPos.applyMatrix3( this.tmpMatrix1.identity().applyQuaternion( this.tmpQuaternion ) );
-
-		} else if ( this.mode == 1 ) {
-
-			this.selfPos.add( this.tmpVec1.copy( this.selfVel ).multiply( deltaTime ) );
-			this.targetPos.add( this.tmpVec1.copy( this.targetVel ).multiply( deltaTime ) );
-
-		} else if ( this.mode == 2 ) {
-
-			this.selfPos.z = 0.5 + midimix.vectorsLerped[ 7 ].x * 4.0;
+			this.selfPos.z = 0.5 + midimix.vectorsLerped[ 7 ].x * 8.0;
 			this.selfPos.x = Math.sin( event.time ) * 10.0 * mpkmini.vectorsLerped[ 0 ].x;
 
 			this.updateFov();
 
+
+		} else if ( this.mode == 1 ) {
+
+
+			this.tmpQuaternion.setFromEuler( this.tmpVec1.copy( this.selfVel ).multiply( event.deltaTime ) );
+
+			this.selfPos.applyMatrix3( this.tmpMatrix1.identity().applyQuaternion( this.tmpQuaternion ) );
+
+
+		} else if ( this.mode == 2 ) {
+
+
+			this.selfPos.add( this.tmpVec1.copy( this.selfVel ).multiply( deltaTime ) );
+			this.targetPos.add( this.tmpVec1.copy( this.targetVel ).multiply( deltaTime ) );
+
+
 		} else if ( this.mode == 3 ) {
 
-			this.selfPos.z = 0.5 + midimix.vectorsLerped[ 7 ].x * 4.0;
-			this.updateFov();
+
+			this.selfPos.copy( animator.getValue<GLP.Vector>( 'cameraPos' )! );
+			this.targetPos.copy( animator.getValue<GLP.Vector>( 'cameraTarget' )! );
 
 		}
 

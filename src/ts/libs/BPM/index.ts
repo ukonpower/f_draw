@@ -49,7 +49,7 @@ export class BPM extends GLP.EventEmitter {
 
 		this.prevPushTime = time;
 
-		if ( diff > 5000 ) return;
+		if ( diff > 5000 || diff < 100 ) return;
 
 		const newBpm = 60 / ( diff / 1000 );
 

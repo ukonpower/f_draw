@@ -5,12 +5,14 @@ import { Trails } from '~/ts/Scene/Entities/Trails';
 
 export class Effect0 extends Part {
 
+	private trail: Trails;
+
 	constructor() {
 
 		super( 4 );
 
-		const trail = new Trails();
-		this.add( trail );
+		this.trail = new Trails();
+		this.add( this.trail );
 
 	}
 
@@ -18,7 +20,7 @@ export class Effect0 extends Part {
 
 		super.updateImpl( event );
 
-		this.emit( 'update' );
+		this.trail.trailVisibility = this.switcher.visibility;
 
 	}
 

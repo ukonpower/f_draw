@@ -6,9 +6,15 @@ layout ( location = 4 ) in vec3 id;
 
 out vec3 vId;
 
+uniform sampler2D uAudioWaveTex;
+uniform sampler2D uAudioFreqTex;
+
 uniform sampler2D uComPosBuf;
 uniform sampler2D uComVelBuf;
 uniform vec2 uGPUResolution;
+uniform vec4 uMidi;
+uniform vec4 uMidi2;
+uniform float uVisibility;
 
 #include <rotate>
 
@@ -19,13 +25,15 @@ void main( void ) {
 	vec4 comPosBuffer = texture( uComPosBuf, vec2( posY * 1.0, id.x ) );
 	vec4 comVelBuffer = texture( uComVelBuf, vec2( posY * 1.0, id.x ) );
     vec4 nextPosBuffer = texture( uComPosBuf, vec2( posY - 1.0 / uGPUResolution.x, id.x ) );
+
+	float audio = texture( uAudioWaveTex, vec2( vId.y, 0.0 ) ).x;
 	
 	vec3 offsetPosition = comPosBuffer.xyz;
 	
     vec3 delta = ( comPosBuffer.xyz - nextPosBuffer.xyz );
 	vec3 vec = normalize( delta );
 
-	outPos.xz *= ( 0.4 );
+	outPos.xz *= step( uv.y, uMidi.w * uVisibility ) * id.x;
 
 	mat2 offsetRot = rotate( PI / 2.0 );
 	outPos.yz *= offsetRot;

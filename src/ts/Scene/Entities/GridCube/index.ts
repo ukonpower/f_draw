@@ -6,12 +6,14 @@ import gridCubeFrag from './shaders/gridCube.fs';
 
 import gridCubeCompute from './shaders/gridCubeCompute.glsl';
 
-import { gl, globalUniforms, midimix } from '~/ts/Globals';
+import { gl, globalUniforms, midimix, mpkmini } from '~/ts/Globals';
 import { gridCubeInstance } from './instance';
 
 export class GridCube extends MXP.Entity {
 
 	private gpu: MXP.GPUComputePass;
+
+	private action: GLP.Vector = new GLP.Vector();
 
 	constructor() {
 
@@ -21,7 +23,7 @@ export class GridCube extends MXP.Entity {
 
 		const count = new GLP.Vector( res * res, res );
 
-		const commonUnforms: GLP.Uniforms = {
+		const commonUnforms: GLP.Uniforms = GLP.UniformsUtils.merge( {
 			uGrid: {
 				value: res,
 				type: "1f"
@@ -33,8 +35,20 @@ export class GridCube extends MXP.Entity {
 			uMidi: {
 				value: midimix.vectorsLerped[ 0 ],
 				type: "4fv"
-			}
-		};
+			},
+			uAction: {
+				value: this.action,
+				type: "2fv"
+			},
+
+		}, globalUniforms.audio );
+
+		midimix.on( "row2/0", () => {
+
+			this.action.x = ( this.action.x + 1 ) % 3;
+			this.action.y = 1;
+
+		} );
 
 		/*-------------------------------
 			GPU
@@ -86,7 +100,7 @@ export class GridCube extends MXP.Entity {
 		const mat = this.addComponent( "material", new MXP.Material( {
 			name: "gridCube",
 			type: [ "deferred", "shadowMap" ],
-			uniforms: GLP.UniformsUtils.merge( globalUniforms.time, globalUniforms.audio, globalUniforms.tex, this.gpu.outputUniforms, commonUnforms ),
+			uniforms: GLP.UniformsUtils.merge( globalUniforms.time, globalUniforms.tex, this.gpu.outputUniforms, commonUnforms ),
 			vert: MXP.hotGet( 'gridCubeVert', gridCubeVert ),
 			frag: MXP.hotGet( 'gridCubeFrag', gridCubeFrag ),
 		} ) );
@@ -135,6 +149,12 @@ export class GridCube extends MXP.Entity {
 
 
 		}
+
+	}
+
+	protected updateImpl( event: MXP.EntityUpdateEvent ): void {
+
+		this.action.y *= 0.8;
 
 	}
 

@@ -3,17 +3,26 @@
 
 layout (location = 0) out vec4 outColor0;
 layout (location = 1) out vec4 outColor1;
+layout (location = 2) out vec4 outColor2;
 
 uniform sampler2D gpuSampler0;
 uniform sampler2D gpuSampler1;
+uniform sampler2D gpuSampler2;
 uniform vec2 uGPUResolution;
+
+uniform sampler2D uAudioWaveTex;
+uniform sampler2D uAudioFreqTex;
 
 uniform float uGrid;
 uniform float uGridInv;
 
 uniform float uTime;
+uniform vec2 uAction;
 
 in vec2 vUv;
+
+uniform vec4 uMidi;
+
 
 #include <noise4D>
 #include <rotate>
@@ -31,45 +40,72 @@ void main( void ) {
 	float t = uTime * 0.8;
 	float id = ( vUv.x * uGPUResolution.x + vUv.y ) / uGPUResolution.x;
 
+
 	vec4 position = texture( gpuSampler0, vUv );
 	vec4 velocity = texture( gpuSampler1, vUv );
 
+	// wave
+
+	vec2 rnd = vec2(
+		random( vUv ),
+		random( vUv + 0.5 )
+	);
+
+	float audio = 0.0;
+
 	// velocity
 
-	vec3 noisePosition = position.xyz * 0.6 + id * (0.5);
-	vec3 noise = fbm3( noisePosition + uTime ) - 0.45;
+	vec3 goalPos = vec3(0.0);
+	vec3 dir = vec3( 0.0 );
 
-	noise = noise * (0.004);
-	velocity.xyz *= 0.99;
-	velocity.xyz += noise;
+	if( uAction.x == 0.0 ) {
 
-	vec3 gravity = vec3( 0.00001 );
+		vec3 cubePos = vec3( 0.0 );
+		cubePos.x = fract(vUv.x * uGrid);
+		cubePos.y = vUv.y;
+		cubePos.z = floor(vUv.x * uGrid) / uGrid;
+		cubePos -= 0.5;
 
-	vec3 gPos = position.xyz + vec3( 0.0, 0.0, 0.0 );
-	gravity += gPos.xyz * smoothstep( 1.0, 3.0, length( gPos.xyz ) ) * -vec3(0.001) ;
+		// outPos *= 1.0 + abs( instanceNormal ) * audio * 10.0 * smoothstep( 1.25, 0.9, length( gpuPosition ) ) * uMidi.w;
 
-	velocity.xyz += gravity;
+		vec3 cubeDir = vec3( 0.0 );
+		vec3 absCubePos = abs( cubePos );
+		float maxDim = max( max( absCubePos.x, absCubePos.y ), absCubePos.z );
+		cubeDir.x = ( absCubePos.x == maxDim ? 1.0 : 0.0 ) * sign( cubePos.x );
+		cubeDir.y = ( absCubePos.y == maxDim ? 1.0 : 0.0 ) * sign( cubePos.y );
+		cubeDir.z = ( absCubePos.z == maxDim ? 1.0 : 0.0 ) * sign( cubePos.z );
 
-	if( length( velocity.xyz ) > 0.15 ) {
+		if( length( cubeDir ) > 1.0 ) cubeDir *= 0.0;
+		
+		goalPos = cubePos;
+		dir = cubeDir * smoothstep( 0.8, 0.0, length( absCubePos ) );
 
-		velocity.xyz = normalize( velocity.xyz ) * 0.15;
+		audio = texture( uAudioFreqTex, vec2( rnd.x, 0.0 ) ).x;
+		audio = pow( audio, 1.0 ) * 2.0;
+
+	} else if( uAction.x == 1.0 ) {
+
+		vec3 ringPos = vec3( 0.0 );
+		float rad = vUv.x * TPI;
+		float r = 0.8;
+		ringPos.x = cos( rad ) * r;
+		ringPos.y = (vUv.y - 0.5) * .5;
+		ringPos.z = sin( rad ) * r;
+
+		goalPos = ringPos;
+		dir = normalize( vec3(ringPos.x, 0.0, ringPos.z ) );
+
+		audio = texture( uAudioFreqTex, vec2( rnd.x, 0.0 ) ).x;
+		audio = pow( audio, 1.0 ) * 1.0;
 
 	}
 
-	//  position
+	velocity *= 0.5;
+	velocity.xyz += dir * audio * uMidi.w;
+	velocity.xyz += (goalPos - position.xyz) * (0.4);
+	position.xyz += velocity.xyz;
 
-	// position.xyz += velocity.xyz;
-	position.x = fract(vUv.x * uGrid);
-	position.y = vUv.y;
-	position.z = floor(vUv.x * uGrid) / uGrid;
-
-	position.xyz -= 0.5;
-	// position.xyz *= 10.0;
-	// position.xyz += 0.5;
-
-	// lifetime
-
-	// position.w += 0.016 / 10.0;
+	position.xyz += (fbm3( position.xyz + uAction.x ) - 0.5) * uAction.y;
 	position.w = 1.0;
 
 	// out

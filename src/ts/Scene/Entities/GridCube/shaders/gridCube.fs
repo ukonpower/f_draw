@@ -3,6 +3,9 @@
 
 uniform sampler2D uNoiseTex;
 
+in vec4 vGpuPos;
+in vec4 vGpuVel;
+
 void main( void ) {
 
 	#include <frag_in>
@@ -13,6 +16,8 @@ void main( void ) {
 	// outMetalic = 0.6;
 
 	// outEmission += n.y;
+
+	outEmission += smoothstep( 0.0, 0.4, length( vGpuVel ) );
 	
 	#include <frag_out>
 

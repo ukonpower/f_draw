@@ -2,10 +2,12 @@ import * as GLP from 'glpower';
 import * as MXP from 'maxpower';
 import { GridCube } from '~/ts/Scene/Entities/GridCube';
 import { Part } from '..';
+import { CubeWire } from '~/ts/Scene/Entities/CubeWire';
 
 export class Part0 extends Part {
 
 	private gridCube: GridCube;
+	private wireCube: CubeWire;
 
 	constructor() {
 

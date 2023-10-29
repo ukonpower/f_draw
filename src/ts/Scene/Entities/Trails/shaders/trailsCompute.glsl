@@ -14,9 +14,10 @@ in vec2 vUv;
 #include <noise4D>
 #include <rotate>
 
+uniform vec4 uMidi;
+
 void main( void ) {
 
-	float t = uTime * 0.8;
 	float id = ( vUv.x * uGPUResolution.x + vUv.y ) / uGPUResolution.x;
 	vec2 pixel = 1.0 / uGPUResolution;
 
@@ -25,28 +26,33 @@ void main( void ) {
 
 	float head = vUv.x < pixel.x ? 1.0 : 0.0;
 
-	vec3 noisePosition = position.xyz * ( 0.20 + ( 1.0 - head ) * 0.1 ) + vUv.y * 0.35;
-	vec3 noise = fbm3( noisePosition + uTime * ( 0.5 + head * 0.5 ) ) - 0.45;
+	float bara = id * (  10.0 * uMidi.x);
+	float t = uTime * mix( 0.1, 1.0, head );
+	vec3 noisePosition = position.xyz * mix( 2.0 * uMidi.y, 0.15 + bara, head);
+
+	vec3 noise = vec3(
+		snoise4D( vec4( noisePosition, t) ),
+		snoise4D( vec4( noisePosition + 1234.5, t) ),
+		snoise4D( vec4( noisePosition + 2345.6, t) )
+	);
 
 	if( vUv.x < pixel.x ) {
 
 		// velocity
 
-		noise = noise * 0.03;
 		velocity.xyz *= 0.99;
-		velocity.xyz += noise; 
+		velocity.xyz += noise * 0.003; 
 
-		float r = (1.0) * 0.0004 ;
+		float r = (1.0) * 0.0004;
 
 		float dir = atan2( position.z, position.x );
-		velocity.x += sin( dir ) * r;
-		velocity.z += -cos( dir ) * r;
+		// velocity.x += sin( dir ) * r;
+		// velocity.z += -cos( dir ) * r;
 
-		vec3 gravity = vec3( 0.00001 );
-
+		vec3 gravity = vec3( 0.0 );
 		vec3 gPos = vec3( 0.0 );
 		gPos = position.xyz + vec3( 0.0, 0.0, 0.0 );
-		gravity += gPos.xyz * smoothstep( 0.0, 0.001, length( gPos.xyz ) ) * -vec3(0.002);
+		gravity += gPos.xyz * smoothstep( 0.0, 3.1, length( gPos.xyz ) ) * -vec3(0.001);
 		velocity.xyz += gravity;
 
 		if( length( velocity.xyz ) > 0.15 ) {
@@ -65,7 +71,7 @@ void main( void ) {
 		vec3 diff = position.xyz - prevPos.xyz;
 
 		position.xyz = mix( position.xyz, texture( gpuSampler0, vUv - vec2( pixel.x, 0.0 ) ).xyz, 0.9 );
-		position.xyz += noise * 0.035;
+		position.xyz += noise * 0.1 * uMidi.z;
 		
 	}
 
