@@ -18,20 +18,6 @@ class App {
 			Element
 		-------------------------------*/
 
-		document.body.innerHTML = `
-			<style>
-				body{
-					margin:0;
-					background-color: #000;
-				}
-				button{display:block;width:200px;margin:0 auto 10px auto;padding:10px;border:1px solid #fff;background:none;color:#fff;cursor:pointer;}
-				canvas{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#000;opacity:0;}
-				.r{width:100%;height:100%;position:relative;overflow:hidden;display:flex;background:#000;}
-				.cw{position:relative;flex:1 1 100%;display:none;}
-				.s{width:100vw;height:100vh;display:flex;flex-direction:column;justify-content:center;}
-			</style>
-		`;
-
 		document.title = "draw();";
 
 		this.rootElm = document.createElement( 'div' );
@@ -124,7 +110,7 @@ class App {
 		this.resize();
 		this.animate();
 
-		this.canvas.style.opacity = "1";
+		this.canvasWrapElm.style.opacity = "1";
 
 	}
 

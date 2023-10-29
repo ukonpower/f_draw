@@ -47,8 +47,10 @@ void main( void ) {
 	col = filmic( col ) * 1.4;
 	
 	#pragma loop_start 4
-		col += texture( uBloomTexture[ LOOP_INDEX ], uv ).xyz * ( 0.5 + float(LOOP_INDEX) * 0.5 ) * 1.0;
+		col += texture( uBloomTexture[ LOOP_INDEX ], uv ).xyz * ( 0.5 + float(LOOP_INDEX) * 0.5 ) * 0.2;
 	#pragma loop_end
+
+	// col = pow( col, vec3( 1.2 ) );
 
 	col *= smoothstep( 1.0, 0.4, len );
 

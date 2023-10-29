@@ -1,8 +1,7 @@
 import * as GLP from 'glpower';
-import * as MXP from 'maxpower';
 import { tmpVector } from '~/ts/Globals';
 
-export class MIDIMIX extends GLP.EventEmitter {
+export class MPKMini extends GLP.EventEmitter {
 
 	public input: MIDIInput | null;
 	public output: MIDIOutput | null;
@@ -10,7 +9,7 @@ export class MIDIMIX extends GLP.EventEmitter {
 	public vectors: GLP.Vector[];
 	public vectorsLerped: GLP.Vector[];
 
-	public row1: number[];
+	public row1: number;
 	public row2: number;
 
 	constructor() {
@@ -25,15 +24,13 @@ export class MIDIMIX extends GLP.EventEmitter {
 		this.input = null;
 		this.output = null;
 
-		this.row1 = [];
+		this.row1 = 0;
 		this.row2 = 0;
 
-		for ( let i = 0; i < 8; i ++ ) {
+		for ( let i = 0; i < 2; i ++ ) {
 
 			this.vectors.push( new GLP.Vector() );
 			this.vectorsLerped.push( new GLP.Vector() );
-
-			this.row1.push( 0 );
 
 		}
 
@@ -43,7 +40,7 @@ export class MIDIMIX extends GLP.EventEmitter {
 
 			m.inputs.forEach( item => {
 
-				if ( item.name == "MIDI Mix" ) {
+				if ( item.name == "MPK mini 3" ) {
 
 					this.input = item;
 
@@ -59,7 +56,7 @@ export class MIDIMIX extends GLP.EventEmitter {
 
 			m.outputs.forEach( item => {
 
-				if ( item.name == "MIDI Mix" ) {
+				if ( item.name == "MPK mini 3" ) {
 
 					this.output = item;
 
@@ -68,9 +65,6 @@ export class MIDIMIX extends GLP.EventEmitter {
 
 			} );
 
-			// init
-
-			this.updateLight();
 
 		} );
 
@@ -101,20 +95,20 @@ export class MIDIMIX extends GLP.EventEmitter {
 	private onMidiMessage( e: MIDIMessageEvent ) {
 
 		const type = e.data[ 0 ];
-		let id = e.data[ 1 ];
+		const id = e.data[ 1 ];
 		const value = e.data[ 2 ] / 127;
 
 		// value
 
-		if ( type == 176 && ( 16 <= id && id <= 31 || 46 <= id && id <= 61 ) ) {
+		if ( type == 176 && ( 70 <= id && id <= 77 ) ) {
 
-			if ( 46 <= id ) id -= 14;
+			const offset = 70;
 
-			const index = Math.floor( ( id - 16 ) / 4 );
+			const index = Math.floor( ( id - offset ) / 4 );
 
 			const vec = this.vectors[ index ];
 
-			const dim = id % 4;
+			const dim = ( id - offset ) % 4;
 
 			if ( dim == 0 ) {
 
@@ -143,31 +137,21 @@ export class MIDIMIX extends GLP.EventEmitter {
 
 		// buttons
 
-		if ( type == 144 ) {
+		if ( type == 153 && ( 36 <= id && id <= 39 ) ) {
 
-			if ( 1 <= id && id <= 24 ) {
+			const index = id - 36;
 
-				const num = Math.floor( id / 3 );
+			this.emit( "pad2", [ index, value ] );
+			this.emit( "pad2/" + index, [ value ] );
 
-				if ( ( id + 2 ) % 3 == 0 ) {
+		}
 
-					this.pushRow1( num );
+		if ( type == 153 && ( 40 <= id && id <= 43 ) ) {
 
-				} else {
+			const index = id - 40;
 
-					this.pushRow2( num - 1 );
-
-				}
-
-			}
-
-			if ( 25 <= id && id <= 27 ) {
-
-				this.pushSide( id );
-
-			}
-
-			this.updateLight();
+			this.emit( "pad1", [ index, value ] );
+			this.emit( "pad1/" + index, [ value ] );
 
 		}
 
@@ -177,10 +161,11 @@ export class MIDIMIX extends GLP.EventEmitter {
 
 	public pushRow1( index: number ) {
 
-		this.row1[ index ] = 1.0 - this.row1[ index ];
+		this.row1 = index;
 
-		this.emit( "row1", [ index, this.row1[ index ] ] );
-		this.emit( "row1/" + index, [ this.row1[ index ] ] );
+		this.emit( "row1", [ this.row1 ] );
+		this.emit( "row1/" + index, [ this.row1 ] );
+
 
 	}
 
@@ -190,37 +175,6 @@ export class MIDIMIX extends GLP.EventEmitter {
 
 		this.emit( "row2", [ this.row2 ] );
 		this.emit( "row2/" + index, [ this.row2 ] );
-
-	}
-
-	public pushSide( index: number ) {
-
-		this.emit( "side", [ index ] );
-		this.emit( "side/" + index );
-
-	}
-
-	private updateLight() {
-
-		if ( ! this.output ) return;
-
-		// row1
-
-		for ( let i = 0; i < 8; i ++ ) {
-
-			this.output.send( [ 0x90, 1 + ( i ) * 3.0, this.row1[ i ] * 127 ] );
-
-		}
-
-		// row2
-
-		for ( let i = 0; i < 8; i ++ ) {
-
-			this.output.send( [ 0x90, 3 + i * 3, 0 ] );
-
-		}
-
-		this.output.send( [ 0x90, ( this.row2 + 1 ) * 3.0, 127 ] );
 
 	}
 

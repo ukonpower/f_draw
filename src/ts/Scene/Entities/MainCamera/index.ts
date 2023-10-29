@@ -1,8 +1,7 @@
 import * as GLP from 'glpower';
 import * as MXP from 'maxpower';
 
-import { gl, globalUniforms, midi, power } from "~/ts/Globals";
-import { LookAt } from '../../Components/LookAt';
+import { gl, globalUniforms, power } from "~/ts/Globals";
 
 import fxaaFrag from './shaders/fxaa.fs';
 import bloomBlurFrag from './shaders/bloomBlur.fs';
@@ -20,6 +19,7 @@ import ssCompositeFrag from './shaders/ssComposite.fs';
 import compositeFrag from './shaders/composite.fs';
 import { ShakeViewer } from '../../Components/ShakeViewer';
 import { RenderCamera, RenderCameraParam } from '~/ts/libs/maxpower/Component/Camera/RenderCamera';
+import { CameraControls } from '../../Components/CameraControls';
 
 export class MainCamera extends MXP.Entity {
 
@@ -28,8 +28,6 @@ export class MainCamera extends MXP.Entity {
 	private cameraComponent: RenderCamera;
 
 	private baseFov: number;
-
-	private lookAt: LookAt;
 
 	// fxaa
 
@@ -108,11 +106,8 @@ export class MainCamera extends MXP.Entity {
 		// components
 
 		this.cameraComponent = this.addComponent( "camera", new RenderCamera( param ) );
-
-		this.lookAt = this.addComponent( 'lookAt', new LookAt() );
-		// this.addComponent( 'orbitControls', new OrbitControls( canvas ) );
+		this.addComponent( 'cameraControls', new CameraControls() );
 		this.addComponent( 'shakeViewer', new ShakeViewer( 1.5, 1.0 ) );
-		// this.addComponent( 'rotateViewer', new RotateViewer( 5.0 ) );
 
 		// resolution
 
@@ -587,7 +582,6 @@ export class MainCamera extends MXP.Entity {
 
 		this.on( 'notice/sceneCreated', ( root: MXP.Entity ) => {
 
-			this.lookAt.setTarget( root.getEntityByName( "CameraTarget" ) || null );
 			this.dofTarget = root.getEntityByName( 'CameraTargetDof' ) || null;
 
 			this.baseFov = this.cameraComponent.fov;
@@ -643,19 +637,12 @@ export class MainCamera extends MXP.Entity {
 
 		// dof params
 
-		this.matrixWorld.decompose( this.tmpVector1 );
-
-		if ( this.dofTarget ) {
-
-			this.dofTarget.matrixWorld.decompose( this.tmpVector2 );
-
-		}
-
 		const fov = this.cameraComponent.fov;
-		const focusDistance = this.tmpVector1.length();
+		const focusDistance = this.userData.dofLenght || 1;
 		const kFilmHeight = 0.012;
-		const flocalLength = 0.5 * kFilmHeight / Math.tan( 0.5 * ( fov / 180 * Math.PI ) );
-		const maxCoc = 1 / this.dofBokeh.renderTarget!.size.y * 4;
+		const flocalLength = kFilmHeight / Math.tan( 0.5 * ( fov / 180 * Math.PI ) );
+
+		const maxCoc = ( 1 / this.dofBokeh.renderTarget!.size.y ) * ( 6 * this.userData.dofPower ?? 1 );
 		const rcpMaxCoC = 1.0 / maxCoc;
 		const coeff = flocalLength * flocalLength / ( 0.3 * ( focusDistance - flocalLength ) * kFilmHeight * 2.0 );
 
@@ -732,7 +719,6 @@ export class MainCamera extends MXP.Entity {
 		this.cameraComponent.near = 0.01;
 		this.cameraComponent.far = 1000;
 		this.cameraComponent.aspect = resolution.x / resolution.y;
-		this.cameraComponent.fov = this.baseFov + Math.max( 0, 1 / this.cameraComponent.aspect - 1 ) * 20.0;
 		this.cameraComponent.needsUpdate = true;
 
 	}

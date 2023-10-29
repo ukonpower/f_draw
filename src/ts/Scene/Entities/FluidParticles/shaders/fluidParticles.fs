@@ -15,6 +15,10 @@ void main( void ) {
 
 	outColor = vec4( 0.0, 0.0, 0.0, 1.0 );
 
+	outColor.xyz += 1.0;
+
+	outRoughness = .2;
+
 	#ifdef IS_FORWARD
 
 		vec2 uv = gl_FragCoord.xy / uResolution;
@@ -24,8 +28,8 @@ void main( void ) {
 			vec2 v = ( vNormal.xy ) * ( 0.05 + ( float(i) / 4.0 ) * 0.05 );
 			v.x *= uAspectRatio;
 			outColor.x += texture( uDeferredTexture, uv + v * 1.0 ).x;
-			outColor.y += texture( uDeferredTexture, uv + v * 1.5 ).y;
-			outColor.z += texture( uDeferredTexture, uv + v * 2.0 ).z;
+			outColor.y += texture( uDeferredTexture, uv + v * 1.2 ).y;
+			outColor.z += texture( uDeferredTexture, uv + v * 2.3 ).z;
 
 		}
 

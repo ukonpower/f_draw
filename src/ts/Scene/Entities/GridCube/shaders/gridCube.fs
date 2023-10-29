@@ -10,7 +10,7 @@ void main( void ) {
 	vec4 n = texture( uNoiseTex, vUv / 5.0 );
 
 	outRoughness = 0.15 + n.x;
-	outMetalic = 0.6;
+	// outMetalic = 0.6;
 
 	// outEmission += n.y;
 	

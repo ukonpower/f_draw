@@ -1,4 +1,3 @@
-import * as GLP from 'glpower';
 import * as MXP from 'maxpower';
 import { Skybox } from '../../Entities/Skybox';
 import { AudioWave } from '../../Entities/AudioWave';
@@ -24,11 +23,8 @@ export class Common extends MXP.Entity {
 		this.add( dust );
 
 		const wave = new AudioWave();
-		wave.position.z = - 2;
 		this.add( wave );
 
-		const trail = new Trails();
-		this.add( trail );
 
 	}
 

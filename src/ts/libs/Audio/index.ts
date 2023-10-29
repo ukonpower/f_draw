@@ -30,12 +30,12 @@ export class Audio extends GLP.EventEmitter {
 
 		this.timeDomainArray = new Uint8Array( this.analyser.fftSize );
 		this.timeDomainTexture = new GLP.GLPowerTexture( gl );
-		this.timeDomainTexture.setting( { type: gl.UNSIGNED_BYTE, internalFormat: gl.LUMINANCE, format: gl.LUMINANCE, magFilter: gl.NEAREST, minFilter: gl.NEAREST } );
+		this.timeDomainTexture.setting( { type: gl.UNSIGNED_BYTE, internalFormat: gl.LUMINANCE, format: gl.LUMINANCE, magFilter: gl.LINEAR, minFilter: gl.LINEAR, wrapS: gl.MIRRORED_REPEAT } );
 		this.timeDomainTexture.attach( { width: this.size, height: 1, data: this.timeDomainArray } );
 
 		this.frequencyArray = new Uint8Array( this.analyser.frequencyBinCount );
 		this.frequencyTexture = new GLP.GLPowerTexture( gl );
-		this.frequencyTexture.setting( { type: gl.UNSIGNED_BYTE, internalFormat: gl.LUMINANCE, format: gl.LUMINANCE, magFilter: gl.NEAREST, minFilter: gl.NEAREST } );
+		this.frequencyTexture.setting( { type: gl.UNSIGNED_BYTE, internalFormat: gl.LUMINANCE, format: gl.LUMINANCE, magFilter: gl.LINEAR, minFilter: gl.LINEAR, wrapS: gl.MIRRORED_REPEAT } );
 		this.frequencyTexture.attach( { width: this.analyser.frequencyBinCount, height: 1, data: this.frequencyArray } );
 
 		// stream

@@ -1,31 +1,59 @@
+import * as MXP from 'maxpower';
+
 import * as GLP from 'glpower';
 
-import { gl, globalUniforms } from '~/ts/Globals';
-import { hotGet, hotUpdate } from '~/ts/libs/glpower_local/Framework/Utils/Hot';
+import { gl, globalUniforms, midimix } from '~/ts/Globals';
 
 import fluidParticlesVert from './shaders/fluidParticles.vs';
 import fluidParticlesFrag from './shaders/fluidParticles.fs';
 import fluidParticlesCompute from './shaders/fluidParticlesCompute.glsl';
-import { Entity } from 'maxpower/Entity';
 
-export class FluidParticles extends Entity {
+export class FluidParticles extends MXP.Entity {
 
-	private gpu: GLP.GPUComputePass;
+	private gpu: MXP.GPUComputePass;
 
 	constructor() {
 
 		super();
 
-		const count = new GLP.Vector( 64, 64 );
+		const count = new GLP.Vector( 128, 128 );
 
-		// gpu
+		const commonUniforms: GLP.Uniforms = GLP.UniformsUtils.merge( {
+			uMidi: {
+				value: midimix.vectorsLerped[ 5 ],
+				type: '4fv'
+			},
+			uPause: {
+				value: 0,
+				type: '1f'
+			}
+		}, globalUniforms.audio );
 
-		this.gpu = new GLP.GPUComputePass( gl, {
+		/*-------------------------------
+			Midi
+		-------------------------------*/
+
+		midimix.on( "row1/5", ( value: number ) => {
+
+
+		} );
+
+		midimix.on( "row2/5", () => {
+
+			commonUniforms.uPause.value = 1.0 - commonUniforms.uPause.value;
+
+		} );
+
+		/*-------------------------------
+			GPU
+		-------------------------------*/
+
+		this.gpu = new MXP.GPUComputePass( gl, {
 			name: 'gpu/fluidParticle',
 			size: count,
 			layerCnt: 2,
-			frag: fluidParticlesCompute,
-			uniforms: globalUniforms.time,
+			frag: MXP.hotGet( 'fluidParticlesCompute', fluidParticlesCompute ),
+			uniforms: GLP.UniformsUtils.merge( globalUniforms.time, commonUniforms ),
 		} );
 
 		this.gpu.initTexture( ( l, x, y ) => {
@@ -34,54 +62,43 @@ export class FluidParticles extends Entity {
 
 		} );
 
-		this.addComponent( "gpuCompute", new GLP.GPUCompute( { passes: [
+		this.addComponent( "gpuCompute", new MXP.GPUCompute( { passes: [
 			this.gpu
 		] } ) );
 
-		// geometry
+		/*-------------------------------
+			Geometry
+		-------------------------------*/
 
-		const range = new GLP.Vector( 10.0, 5.0, 10.0 );
-
-		const positionArray = [];
 		const computeUVArray = [];
-		const idArray = [];
+		const rndArray = [];
 
 		for ( let i = 0; i < count.y; i ++ ) {
 
 			for ( let j = 0; j < count.x; j ++ ) {
 
-				positionArray.push( ( Math.random() - 0.5 ) * range.x * 0.0 );
-				positionArray.push( ( Math.random() - 0.5 ) * range.y * 0.0 );
-				positionArray.push( ( Math.random() - 0.5 ) * range.z * 0.0 );
-
 				computeUVArray.push( j / count.x, i / count.y );
-
-				idArray.push( Math.random(), Math.random(), Math.random() );
+				rndArray.push( Math.random(), Math.random(), Math.random() );
 
 			}
 
 		}
 
-		const geo = this.addComponent( "geometry", new GLP.SphereGeometry( 0.1, ) );
-		geo.setAttribute( "offsetPosition", new Float32Array( positionArray ), 3, { instanceDivisor: 1 } );
+		const geo = this.addComponent( "geometry", new MXP.SphereGeometry( 0.05 ) );
 		geo.setAttribute( "computeUV", new Float32Array( computeUVArray ), 2, { instanceDivisor: 1 } );
-		geo.setAttribute( "id", new Float32Array( idArray ), 3, { instanceDivisor: 1 } );
+		geo.setAttribute( "rnd", new Float32Array( rndArray ), 3, { instanceDivisor: 1 } );
 
-		// material
+		/*-------------------------------
+			Material
+		-------------------------------*/
 
-		const mat = this.addComponent( "material", new GLP.Material( {
+		const mat = this.addComponent( "material", new MXP.Material( {
 			name: "fluid",
-			type: [ "deferred", 'shadowMap' ],
-			uniforms: GLP.UniformsUtils.merge( globalUniforms.time, globalUniforms.resolution, {
-				uRange: {
-					value: range,
-					type: "3f"
-				},
-				...this.gpu.outputUniforms
+			type: [ "deferred", "shadowMap" ],
+			uniforms: GLP.UniformsUtils.merge( globalUniforms.time, globalUniforms.resolution, commonUniforms, this.gpu.outputUniforms, {
 			} ),
-			vert: hotGet( 'fluidParticlesVert', fluidParticlesVert ),
-			frag: hotGet( 'fluidParticlesFrag', fluidParticlesFrag ),
-			// drawType: gl.POINTS
+			vert: MXP.hotGet( 'fluidParticlesVert', fluidParticlesVert ),
+			frag: MXP.hotGet( 'fluidParticlesFrag', fluidParticlesFrag ),
 		} ) );
 
 		if ( import.meta.hot ) {
@@ -90,17 +107,28 @@ export class FluidParticles extends Entity {
 
 				if ( module[ 0 ] ) {
 
-					mat.vert = hotUpdate( 'fluidParticlesVert', module[ 0 ].default );
+					mat.vert = MXP.hotUpdate( 'fluidParticlesVert', module[ 0 ].default );
 
 				}
 
 				if ( module[ 1 ] ) {
 
-					mat.frag = hotUpdate( 'fluidParticlesFrag', module[ 1 ].default );
+					mat.frag = MXP.hotUpdate( 'fluidParticlesFrag', module[ 1 ].default );
 
 				}
 
 				mat.requestUpdate();
+
+			} );
+
+			import.meta.hot.accept( "./shaders/fluidParticlesCompute.glsl", ( module ) => {
+
+				if ( module ) {
+
+					this.gpu.frag = MXP.hotUpdate( "fluidParticlesCompute", module.default );
+					this.gpu.requestUpdate();
+
+				}
 
 			} );
 

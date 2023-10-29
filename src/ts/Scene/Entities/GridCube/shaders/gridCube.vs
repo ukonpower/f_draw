@@ -10,6 +10,8 @@ uniform sampler2D gpuSampler1;
 uniform float uGrid;
 uniform float uGridInv;
 
+uniform vec4 uMidi;
+
 layout (location=3) in vec3 instancePos;
 layout (location=4) in vec4 instanceId;
 layout (location=5) in vec3 instanceNormal;
@@ -33,15 +35,15 @@ void main( void ) {
 	float audio = texture( uAudioFreqTex, vec2( instanceRandom.x, 0.0 ) ).x;
 	audio = pow( audio, 1.0 ) * 2.0;
 
-	outPos.xyz *= 1.0 + audio * 2.0;
+	outPos.xyz *= 1.0 + audio * uMidi.x * 2.0;
 	outPos += instanceNormal * uGridInv / 2.0;
-	outPos *= 1.0 + abs( instanceNormal ) * audio * 10.0 * smoothstep( 1.25, 0.9, length( gpuPosition ) ) * 1.0;
+	outPos *= 1.0 + abs( instanceNormal ) * audio * 10.0 * smoothstep( 1.25, 0.9, length( gpuPosition ) ) * uMidi.x;
 	outPos -= instanceNormal * uGridInv / 2.0;
 
 	// instance position
 
 	outPos += gpuPosition.xyz * 1.0;
-	outPos += instanceNormal * ( 0.0 + audio * 0.9 );
+	outPos += instanceNormal * ( audio * ( uMidi.x * 2.0 ) );
 
 	outPos *= 0.5;
 

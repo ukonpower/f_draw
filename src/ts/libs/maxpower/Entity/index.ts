@@ -38,6 +38,7 @@ export class Entity extends GLP.EventEmitter {
 	public matrix: GLP.Matrix;
 	public matrixWorld: GLP.Matrix;
 	public matrixWorldPrev: GLP.Matrix;
+	public autoMatrixUpdate: boolean;
 
 	public parent: Entity | null;
 	public children: Entity[];
@@ -63,6 +64,7 @@ export class Entity extends GLP.EventEmitter {
 		this.matrix = new GLP.Matrix();
 		this.matrixWorld = new GLP.Matrix();
 		this.matrixWorldPrev = new GLP.Matrix();
+		this.autoMatrixUpdate = true;
 
 		this.parent = null;
 		this.children = [];
@@ -131,7 +133,11 @@ export class Entity extends GLP.EventEmitter {
 
 		// matrix
 
-		this.updateMatrix();
+		if ( this.autoMatrixUpdate ) {
+
+			this.updateMatrix();
+
+		}
 
 		// after
 

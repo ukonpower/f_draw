@@ -6,7 +6,7 @@ import gridCubeFrag from './shaders/gridCube.fs';
 
 import gridCubeCompute from './shaders/gridCubeCompute.glsl';
 
-import { gl, globalUniforms } from '~/ts/Globals';
+import { gl, globalUniforms, midimix } from '~/ts/Globals';
 import { gridCubeInstance } from './instance';
 
 export class GridCube extends MXP.Entity {
@@ -30,6 +30,10 @@ export class GridCube extends MXP.Entity {
 				value: 1.0 / res,
 				type: "1f"
 			},
+			uMidi: {
+				value: midimix.vectorsLerped[ 0 ],
+				type: "4fv"
+			}
 		};
 
 		/*-------------------------------

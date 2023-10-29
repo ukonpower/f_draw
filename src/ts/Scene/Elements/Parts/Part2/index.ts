@@ -1,16 +1,12 @@
 import * as GLP from 'glpower';
 import * as MXP from 'maxpower';
+import { Part } from '..';
 
-import { Phase } from '..';
-
-export class Phase2 extends Phase {
+export class Part2 extends Part {
 
 	constructor() {
 
 		super( 2 );
-
-		// const box = new GridCube();
-		// this.add( box );
 
 		const box = new MXP.Entity();
 		box.addComponent( "material", new MXP.Material( {} ) );
@@ -18,12 +14,6 @@ export class Phase2 extends Phase {
 		this.add( box );
 
 		box.quaternion.setFromEuler( new GLP.Euler( 1, 1, 1 ) );
-
-		this.on( 'update', () => {
-
-			box.quaternion.multiply( new GLP.Quaternion().setFromEuler( new GLP.Euler( 0.005, 0.003, 0.001 ) ) );
-
-		} );
 
 	}
 

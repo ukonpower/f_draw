@@ -1,15 +1,17 @@
 import * as GLP from 'glpower';
 import * as MXP from 'maxpower';
 
-import { animator, audio, gl, globalUniforms, midimix, power } from '../Globals';
+import { animator, audio, bpm, gl, globalUniforms, midimix, mpkmini, power } from '../Globals';
 
 import { MainCamera } from './Entities/MainCamera';
 import { Renderer } from './Renderer';
 import { createTextures } from './Textures';
-import { Common } from './Phase/Common';
-import { Phase1 } from './Phase/Phase1';
-import { Phase2 } from './Phase/Phase2';
-import { Phase0 } from './Phase/Phase0';
+import { Common } from './Elements/Common';
+import { Part0 } from './Elements/Parts/Part0';
+import { Part1 } from './Elements/Parts/Part1';
+import { Part2 } from './Elements/Parts/Part2';
+import { Effect0 } from './Elements/Parts/Effect0';
+import { Effect1 } from './Elements/Parts/Effect1';
 
 type SceneUpdateParam = {
 	forceDraw: boolean
@@ -77,16 +79,12 @@ export class Scene extends GLP.EventEmitter {
 
 		this.root.add( new Common() );
 
-		const phase0 = new Phase0();
-		this.root.add( phase0 );
+		this.root.add( new Part0() );
+		this.root.add( new Part1() );
+		this.root.add( new Part2() );
 
-		const phase1 = new Phase1();
-		this.root.add( phase1 );
-
-		const phase2 = new Phase2();
-		this.root.add( phase2 );
-
-		midimix.pushRow1( 0 );
+		this.root.add( new Effect0() );
+		this.root.add( new Effect1() );
 
 		// renderer
 
@@ -113,6 +111,12 @@ export class Scene extends GLP.EventEmitter {
 		};
 
 		animator.update( this.deltaTime );
+
+		midimix.update( this.deltaTime );
+
+		mpkmini.update( this.deltaTime );
+
+		bpm.update( this.deltaTime );
 
 		audio.update( this.deltaTime );
 

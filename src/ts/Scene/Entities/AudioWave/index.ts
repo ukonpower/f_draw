@@ -4,7 +4,7 @@ import * as MXP from 'maxpower';
 import audioWaveVert from './shaders/audioWave.vs';
 import audioWaveFrag from './shaders/audioWave.fs';
 
-import { audio, globalUniforms } from '~/ts/Globals';
+import { audio, globalUniforms, midimix } from '~/ts/Globals';
 
 export class AudioWave extends MXP.Entity {
 
@@ -12,14 +12,20 @@ export class AudioWave extends MXP.Entity {
 
 		super();
 
-		this.addComponent( "geometry", new MXP.PlaneGeometry( 1, 1, audio.size ) );
+		this.addComponent( "geometry", new MXP.CylinderGeometry( 20.0, 20.0, 1.0, audio.size, 1, false ) );
 
 		const mat = this.addComponent( "material", new MXP.Material( {
 			name: "audioWave",
 			type: [ "deferred" ],
-			uniforms: GLP.UniformsUtils.merge( globalUniforms.time, globalUniforms.audio, {} ),
+			uniforms: GLP.UniformsUtils.merge( globalUniforms.time, globalUniforms.audio, {
+				uMidi: {
+					value: midimix.vectorsLerped[ 6 ],
+					type: '4fv'
+				}
+			} ),
 			vert: MXP.hotGet( 'audioWaveVert', audioWaveVert ),
 			frag: MXP.hotGet( 'audioWaveFrag', audioWaveFrag ),
+			cullFace: false,
 		} ) );
 
 		if ( import.meta.hot ) {

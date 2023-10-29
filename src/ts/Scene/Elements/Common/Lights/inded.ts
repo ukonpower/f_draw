@@ -11,7 +11,7 @@ export class Lights extends MXP.Entity {
 		light.position.set( 0, 5, - 2 );
 		light.addComponent( "light", new MXP.Light( {
 			lightType: "spot",
-			intensity: 7,
+			intensity: 4,
 			blend: 1,
 			angle: Math.PI / 2 * 0.8,
 			useShadowMap: true,
@@ -21,15 +21,15 @@ export class Lights extends MXP.Entity {
 		this.add( light );
 
 		const light2 = new MXP.Entity();
-		light2.position.set( 1, 2, 3 );
+		light2.position.set( 3, 3, 3 );
 		light2.addComponent( "light", new MXP.Light( {
 			lightType: "spot",
-			intensity: 1.0,
+			intensity: 2.0,
 			blend: 1.0,
-			angle: Math.PI / 2 * 0.8,
+			angle: Math.PI / 2,
 			useShadowMap: true,
 		} ) );
-		light2.quaternion.setFromEuler( new GLP.Euler( Math.PI / 5, Math.PI / 2, 0.0 ) );
+		light2.quaternion.setFromEuler( new GLP.Euler( Math.PI / 4, Math.PI / 4, 0.0 ) );
 		this.add( light2 );
 
 
