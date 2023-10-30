@@ -20,7 +20,7 @@ export class Trails extends MXP.Entity {
 
 		this.commonUniforms = GLP.UniformsUtils.merge( {
 			uMidi: {
-				value: midimix.vectorsLerped[ 4 ],
+				value: midimix.vectorsLerped[ 2 ],
 				type: "4fv"
 			},
 			uMidi2: {

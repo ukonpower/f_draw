@@ -1,18 +1,16 @@
 import * as GLP from 'glpower';
+import * as MXP from 'maxpower';
 
 import { globalUniforms, power } from '~/ts/Globals';
 
 import treeModelVert from './shaders/treeModel.vs';
 import treeVert from './shaders/tree.vs';
 import treeFrag from './shaders/tree.fs';
-
-import { hotGet, hotUpdate } from '~/ts/libs/glpower_local/Framework/Utils/Hot';
-import { shaderParse } from '../../Renderer/ShaderParser';
 import { Modeler } from '~/ts/libs/Modeler';
-import { Entity } from 'maxpower/Entity';
-import { CylinderGeometry } from 'maxpower';
+import { shaderParse } from '../../Renderer/ShaderParser';
 
-export class Tree extends Entity {
+
+export class Tree extends MXP.Entity {
 
 	constructor() {
 
@@ -45,9 +43,9 @@ export class Tree extends Entity {
 
 		};
 
-		_( new GLP.Vector(), new GLP.Quaternion(), 1.0 );
+		_( new GLP.Vector( 0, - 2, 0 ), new GLP.Quaternion(), 1.0 );
 
-		const geo = new CylinderGeometry( 0.1, 0.1, 1.0 );
+		const geo = new MXP.CylinderGeometry( 0.1, 0.1, 1.0 );
 		geo.setAttribute( "instancePosition", new Float32Array( positionArray ), 3, { instanceDivisor: 1 } );
 		geo.setAttribute( "instanceQuaternion", new Float32Array( quaternionArray ), 4, { instanceDivisor: 1 } );
 		geo.setAttribute( "instanceScale", new Float32Array( scaleArray ), 3, { instanceDivisor: 1 } );
@@ -61,13 +59,13 @@ export class Tree extends Entity {
 
 		// material
 
-		const mat = this.addComponent( "material", new GLP.Material( {
+		const mat = this.addComponent( "material", new MXP.Material( {
 			name: "tree",
 			type: [ "deferred", "shadowMap" ],
 			uniforms: GLP.UniformsUtils.merge( globalUniforms.time, globalUniforms.resolution, {
 			} ),
-			vert: hotGet( 'treeVert', treeVert ),
-			frag: hotGet( 'treeFrag', treeFrag ),
+			vert: MXP.hotGet( 'treeVert', treeVert ),
+			frag: MXP.hotGet( 'treeFrag', treeFrag ),
 		} ) );
 
 		if ( import.meta.hot ) {
@@ -76,13 +74,13 @@ export class Tree extends Entity {
 
 				if ( module[ 0 ] ) {
 
-					mat.vert = hotUpdate( 'treeVert', module[ 0 ].default );
+					mat.vert = MXP.hotUpdate( 'treeVert', module[ 0 ].default );
 
 				}
 
 				if ( module[ 1 ] ) {
 
-					mat.frag = hotUpdate( 'treeFrag', module[ 1 ].default );
+					mat.frag = MXP.hotUpdate( 'treeFrag', module[ 1 ].default );
 
 				}
 

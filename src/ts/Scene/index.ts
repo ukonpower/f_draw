@@ -10,8 +10,9 @@ import { Common } from './Elements/Common';
 import { Part0 } from './Elements/Parts/Part0';
 import { Part1 } from './Elements/Parts/Part1';
 import { Part2 } from './Elements/Parts/Part2';
-import { Effect0 } from './Elements/Parts/Effect0';
-import { Effect1 } from './Elements/Parts/Effect1';
+import { Part3 } from './Elements/Parts/Part3';
+// import { Effect0 } from './Elements/Parts/Effect0';
+// import { Effect1 } from './Elements/Parts/Effect1';
 
 type SceneUpdateParam = {
 	forceDraw: boolean
@@ -82,9 +83,10 @@ export class Scene extends GLP.EventEmitter {
 		this.root.add( new Part0() );
 		this.root.add( new Part1() );
 		this.root.add( new Part2() );
+		this.root.add( new Part3() );
 
-		this.root.add( new Effect0() );
-		this.root.add( new Effect1() );
+		// this.root.add( new Effect0() );
+		// this.root.add( new Effect1() );
 
 		// renderer
 

@@ -130,9 +130,7 @@ export class CameraControls extends MXP.Component {
 				Mode0 静止
 			-------------------------------*/
 
-			const d = 0.5 + this.spawnDistance * 4.0;
-
-			this.selfPos.set( 0, 0, d );
+			this.selfPos.set( 0, 0, 0 );
 			this.targetPos.set( 0, 0, 0 );
 
 			this.selfVel.set( 0, 0, 0 );
@@ -144,7 +142,7 @@ export class CameraControls extends MXP.Component {
 				Mode1 中心
 			-------------------------------*/
 
-			const selfRadius = 0.2 + ( this.spawnDistance * 2.0 );
+			const selfRadius = 0.2 + ( this.spawnDistance * 10.0 );
 			const selfRadian = Math.random() * Math.PI * 2.0;
 
 			this.selfPos.set(
@@ -165,7 +163,7 @@ export class CameraControls extends MXP.Component {
 				Mode2 平行移動
 			-------------------------------*/
 
-			const selfRadius = 0.5 + Math.random() * 0.2 + ( this.spawnDistance * 4.0 );
+			const selfRadius = 0.5 + Math.random() * 0.2 + ( this.spawnDistance * 10.0 );
 			const selfRadian = Math.random() * Math.PI * 2.0;
 
 			this.selfPos.set(
@@ -203,7 +201,7 @@ export class CameraControls extends MXP.Component {
 				Mode3 爆
 			-------------------------------*/
 
-			const selfRadius = 0.5 + Math.random() * 0.2 + ( this.spawnDistance * 4.0 );
+			const selfRadius = 0.5 + Math.random() * 0.2 + ( this.spawnDistance * 10.0 );
 			const selfRadian = Math.random() * Math.PI * 2.0;
 
 			animator.animate( "cameraPos", new GLP.Vector(
@@ -235,8 +233,7 @@ export class CameraControls extends MXP.Component {
 
 		if ( this.mode == 0 ) {
 
-
-			this.selfPos.z = 0.5 + midimix.vectorsLerped[ 7 ].x * 8.0;
+			this.selfPos.z = 0.5 + midimix.vectorsLerped[ 7 ].x * 15.0;
 			this.selfPos.x = Math.sin( event.time ) * 10.0 * mpkmini.vectorsLerped[ 0 ].x;
 
 			this.updateFov();
@@ -244,9 +241,7 @@ export class CameraControls extends MXP.Component {
 
 		} else if ( this.mode == 1 ) {
 
-
 			this.tmpQuaternion.setFromEuler( this.tmpVec1.copy( this.selfVel ).multiply( event.deltaTime ) );
-
 			this.selfPos.applyMatrix3( this.tmpMatrix1.identity().applyQuaternion( this.tmpQuaternion ) );
 
 
@@ -288,7 +283,7 @@ export class CameraControls extends MXP.Component {
 
 		if ( this.cameraComponent ) {
 
-			this.cameraComponent.fov = 130 - ( ( midimix.vectorsLerped[ 7 ].w ) ) * 120.0;
+			this.cameraComponent.fov = 130 - ( ( midimix.vectorsLerped[ 7 ].w ) ) * 125.0;
 
 		}
 

@@ -8,7 +8,7 @@ export class Lights extends MXP.Entity {
 		super();
 
 		const light = new MXP.Entity();
-		light.position.set( 0, 5, - 2 );
+		light.position.set( 0, 10, - 2 );
 		light.addComponent( "light", new MXP.Light( {
 			lightType: "spot",
 			intensity: 4,

@@ -1,19 +1,17 @@
-import * as GLP from 'glpower';
 import * as MXP from 'maxpower';
 import { Part } from '..';
+import { Trails } from '~/ts/Scene/Entities/Trails';
 
 export class Part2 extends Part {
+
+	private trail: Trails;
 
 	constructor() {
 
 		super( 2 );
 
-		const box = new MXP.Entity();
-		box.addComponent( "material", new MXP.Material( {} ) );
-		box.addComponent( "geometry", new MXP.CylinderGeometry() );
-		this.add( box );
-
-		box.quaternion.setFromEuler( new GLP.Euler( 1, 1, 1 ) );
+		this.trail = new Trails();
+		this.add( this.trail );
 
 	}
 
@@ -21,7 +19,7 @@ export class Part2 extends Part {
 
 		super.updateImpl( event );
 
-		this.emit( 'update' );
+		this.trail.trailVisibility = this.switcher.visibility;
 
 	}
 

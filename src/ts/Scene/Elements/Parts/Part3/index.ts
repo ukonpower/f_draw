@@ -1,18 +1,13 @@
-import * as GLP from 'glpower';
 import * as MXP from 'maxpower';
 import { Part } from '..';
 import { Trails } from '~/ts/Scene/Entities/Trails';
 
-export class Effect0 extends Part {
-
-	private trail: Trails;
+export class Part3 extends Part {
 
 	constructor() {
 
-		super( 4 );
+		super( 3 );
 
-		this.trail = new Trails();
-		this.add( this.trail );
 
 	}
 
@@ -20,7 +15,6 @@ export class Effect0 extends Part {
 
 		super.updateImpl( event );
 
-		this.trail.trailVisibility = this.switcher.visibility;
 
 	}
 

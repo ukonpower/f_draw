@@ -12,7 +12,7 @@ export class CubeWire extends MXP.Entity {
 
 		super();
 
-		const geo = this.addComponent( "geometry", new MXP.CubeGeometry( 0.005, 1, 0.005 ) );
+		const geo = this.addComponent( "geometry", new MXP.CubeGeometry( 0.005, 5, 0.005 ) );
 
 		const w = 1.0;
 		const hw = w / 2.0;

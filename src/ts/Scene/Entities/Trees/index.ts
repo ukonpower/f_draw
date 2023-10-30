@@ -1,8 +1,7 @@
-import * as GLP from 'glpower';
+import * as MXP from 'maxpower';
 import { Tree } from '../Tree';
-import { Entity, EntityUpdateEvent } from 'maxpower/Entity';
 
-export class Trees extends Entity {
+export class Trees extends MXP.Entity {
 
 	private length: number;
 
@@ -26,7 +25,7 @@ export class Trees extends Entity {
 
 	}
 
-	protected updateImpl( event: EntityUpdateEvent ): void {
+	protected updateImpl( event: MXP.EntityUpdateEvent ): void {
 	}
 
 }

@@ -21,7 +21,7 @@ export class FluidParticles extends MXP.Entity {
 
 		this.commonUniforms = GLP.UniformsUtils.merge( {
 			uMidi: {
-				value: midimix.vectorsLerped[ 5 ],
+				value: midimix.vectorsLerped[ 1 ],
 				type: '4fv'
 			},
 			uMidi2: {
@@ -42,12 +42,10 @@ export class FluidParticles extends MXP.Entity {
 			Midi
 		-------------------------------*/
 
-		midimix.on( "row1/5", ( value: number ) => {
-
-
+		midimix.on( "row1/1", ( value: number ) => {
 		} );
 
-		midimix.on( "row2/5", () => {
+		midimix.on( "row2/1", () => {
 
 			this.commonUniforms.uPause.value = 1.0 - this.commonUniforms.uPause.value;
 

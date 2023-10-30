@@ -1,7 +1,8 @@
 import * as GLP from 'glpower';
+import * as MXP from 'maxpower';
+
 import { setUniforms } from '~/ts/Scene/Renderer';
 import { shaderParse } from '~/ts/Scene/Renderer/ShaderParser';
-import { Entity } from '../Framework/Entity';
 
 export class Modeler {
 
@@ -17,9 +18,9 @@ export class Modeler {
 
 	}
 
-	public bakeTf( baseGeometry: GLP.Geometry, vertexShader: string, uniforms?: any, defines?: any ) {
+	public bakeTf( baseGeometry: MXP.Geometry, vertexShader: string, uniforms?: any, defines?: any ) {
 
-		const resultGeo = new GLP.Geometry();
+		const resultGeo = new MXP.Geometry();
 
 		const program = this.power.createProgram();
 		const tf = new GLP.GLPowerTransformFeedback( this.gl );
@@ -151,21 +152,21 @@ export class Modeler {
 
 	}
 
-	public bakeEntity( entity: Entity ) {
+	public bakeEntity( entity: MXP.Entity ) {
 
-		const resultGeo = new GLP.Geometry();
+		const resultGeo = new MXP.Geometry();
 
 		const posArray: number[] = [];
 		const normalArray : number[] = [];
 		const indexArray: number[] = [];
 
-		const _ = ( e: Entity, matrix: GLP.Matrix ) => {
+		const _ = ( e: MXP.Entity, matrix: GLP.Matrix ) => {
 
-			let geo = e.getComponent<GLP.Geometry>( 'geometry' );
+			let geo = e.getComponent<MXP.Geometry>( 'geometry' );
 
 			if ( geo ) {
 
-				const mat = e.getComponent<GLP.Material>( 'material' );
+				const mat = e.getComponent<MXP.Material>( 'material' );
 
 				if ( mat ) {
 
