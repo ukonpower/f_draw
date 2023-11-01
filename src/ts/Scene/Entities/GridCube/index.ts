@@ -40,8 +40,7 @@ export class GridCube extends MXP.Entity {
 				value: this.action,
 				type: "2fv"
 			},
-
-		}, globalUniforms.audio );
+		}, globalUniforms.audio, );
 
 		midimix.on( "row2/0", () => {
 

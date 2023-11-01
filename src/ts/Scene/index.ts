@@ -79,7 +79,6 @@ export class Scene extends GLP.EventEmitter {
 		// Wrold
 
 		this.root.add( new Common() );
-
 		this.root.add( new Part0() );
 		this.root.add( new Part1() );
 		this.root.add( new Part2() );

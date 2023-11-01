@@ -2,12 +2,10 @@ import * as GLP from 'glpower';
 import * as MXP from 'maxpower';
 import { GridCube } from '~/ts/Scene/Entities/GridCube';
 import { Part } from '..';
-import { GridTrees } from '~/ts/Scene/Entities/GridTrees';
 
 export class Part0 extends Part {
 
 	private gridCube: GridCube;
-	private gridTrees: GridTrees;
 
 	constructor() {
 
@@ -16,9 +14,6 @@ export class Part0 extends Part {
 		this.gridCube = new GridCube();
 		this.add( this.gridCube );
 		this.gridCube.quaternion.setFromEuler( new GLP.Euler( 1, 1, 1 ) );
-
-		this.gridTrees = new GridTrees();
-		this.add( this.gridTrees );
 
 	}
 

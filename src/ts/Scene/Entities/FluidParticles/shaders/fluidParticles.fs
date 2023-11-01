@@ -15,11 +15,11 @@ void main( void ) {
 	#include <frag_in>
 
 	outColor = vec4( 1.0 );
+	outColor.xyz *= 0.0;
 
-	outColor.xyz += 1.0;
-	outRoughness = .1;
-
-	outEmission += smoothstep( 0.99, 1.0, vRnd.x );
+	outRoughness = .2;
+	outMetalic = 0.0;
+	outEmission += smoothstep( 0.995, 1.0, vRnd.x );
 
 	
 	#include <frag_out>

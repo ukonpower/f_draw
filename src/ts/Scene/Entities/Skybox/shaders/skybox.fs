@@ -19,6 +19,7 @@ void main( void ) {
 	outRoughness = 1.0;
 	outColor *= 0.0;
 	outEmission *= 0.0;
+	outEnv = 0.0;
 
 	// discard;
 	

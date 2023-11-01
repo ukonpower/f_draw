@@ -32,7 +32,6 @@ export class Lights extends MXP.Entity {
 		light2.quaternion.setFromEuler( new GLP.Euler( Math.PI / 4, Math.PI / 4, 0.0 ) );
 		this.add( light2 );
 
-
 	}
 
 }

@@ -31,8 +31,6 @@ export class Common extends MXP.Entity {
 		this.wireCube.scale.set( 5.0, 5.0, 5.0 );
 		this.add( this.wireCube );
 
-
-
 	}
 
 }
