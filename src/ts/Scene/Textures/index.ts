@@ -51,8 +51,6 @@ export const createTextures = () => {
 
 	Promise.all( prms ).then( imgs => {
 
-		console.log( imgs );
-
 		globalUniforms.tex.uEnvTex.value.attach( imgs );
 
 	} );

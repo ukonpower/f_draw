@@ -15,6 +15,7 @@ export class PostProcess extends Component {
 	public uuid: number;
 	public passes: PostProcessPass[];
 	public input: GLP.GLPowerTexture[];
+	public output: GLP.GLPowerFrameBuffer | null;
 
 	constructor( param: PostProcessParam ) {
 
@@ -25,6 +26,8 @@ export class PostProcess extends Component {
 		this.passes = param.passes;
 
 		this.input = param.input || [];
+
+		this.output = this.passes[ this.passes.length - 1 ].renderTarget;
 
 	}
 

@@ -5,6 +5,7 @@ export type RenderCameraTarget = {
 	gBuffer: GLPowerFrameBuffer,
 	deferredBuffer: GLPowerFrameBuffer,
 	forwardBuffer: GLPowerFrameBuffer,
+	uiBuffer: GLPowerFrameBuffer,
 }
 
 export interface RenderCameraParam extends CameraParam {

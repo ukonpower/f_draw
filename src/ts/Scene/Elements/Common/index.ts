@@ -4,6 +4,7 @@ import { AudioWave } from '../../Entities/AudioWave';
 import { Lights } from './Lights/inded';
 import { DustParticles } from '../../Entities/DustParticles';
 import { CubeWire } from '../../Entities/CubeWire';
+import { HUD } from '../../Entities/HUD';
 
 export class Common extends MXP.Entity {
 
@@ -30,6 +31,10 @@ export class Common extends MXP.Entity {
 		this.wireCube = new CubeWire();
 		this.wireCube.scale.set( 5.0, 5.0, 5.0 );
 		this.add( this.wireCube );
+
+		const hud = new HUD();
+		this.add( hud );
+
 
 	}
 

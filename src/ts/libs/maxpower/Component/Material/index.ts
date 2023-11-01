@@ -1,7 +1,7 @@
 import * as GLP from 'glpower';
 
 import { Component } from "..";
-export type MaterialRenderType = "shadowMap" | "deferred" | "forward" | "envMap" | 'postprocess'
+export type MaterialRenderType = "shadowMap" | "deferred" | "forward" | "envMap" | 'postprocess' | 'ui'
 
 type MaterialDefines = {[key: string]: any};
 type MaterialVisibility = {[K in MaterialRenderType]?: boolean}
@@ -53,6 +53,7 @@ export class Material extends Component {
 			shadowMap: this.type.indexOf( 'shadowMap' ) > - 1,
 			deferred: this.type.indexOf( 'deferred' ) > - 1,
 			forward: this.type.indexOf( 'forward' ) > - 1,
+			ui: this.type.indexOf( 'ui' ) > - 1,
 			envMap: this.type.indexOf( 'envMap' ) > - 1,
 			postprocess: this.type.indexOf( 'postprocess' ) > - 1,
 		};

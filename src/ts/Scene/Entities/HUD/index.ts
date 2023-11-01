@@ -1,12 +1,12 @@
 import * as GLP from 'glpower';
-import { hotGet, hotUpdate } from '~/ts/libs/glpower_local/Framework/Utils/Hot';
+import * as MXP from 'maxpower';
+
 
 import hudVert from './shaders/hud.vs';
 import hudFrag from './shaders/hud.fs';
 import { gl, globalUniforms } from '~/ts/Globals';
-import { Entity } from 'maxpower/Entity';
 
-export class HUD extends Entity {
+export class HUD extends MXP.Entity {
 
 	constructor() {
 
@@ -31,10 +31,10 @@ export class HUD extends Entity {
 
 		};
 
-		const border = new Entity();
+		const border = new MXP.Entity();
 		this.add( border );
 
-		const borderGeo = border.addComponent( "geometry", new GLP.PlaneGeometry( 2.0, 2.0 ) );
+		const borderGeo = border.addComponent( "geometry", new MXP.PlaneGeometry( 2.0, 2.0 ) );
 
 		borderGeo.setAttribute( 'num', new Float32Array( ( ()=>{
 
@@ -52,16 +52,16 @@ export class HUD extends Entity {
 
 		} )() ), 1, { instanceDivisor: 1 } );
 
-		const mat = border.addComponent( "material", new GLP.Material( {
-			frag: hotGet( 'hudFrag', hudFrag ),
-			vert: hotGet( 'hudVert', hudVert ),
+		const mat = border.addComponent( "material", new MXP.Material( {
+			frag: MXP.hotGet( 'hudFrag', hudFrag ),
+			vert: MXP.hotGet( 'hudVert', hudVert ),
 			uniforms: GLP.UniformsUtils.merge( globalUniforms.time, {
 				uTex: {
 					value: texture,
 					type: "1i"
 				}
 			} ),
-			type: [ "forward" ],
+			type: [ "ui" ],
 		} ) );
 
 		if ( import.meta.hot ) {
@@ -70,7 +70,7 @@ export class HUD extends Entity {
 
 				if ( module ) {
 
-					mat.vert = hotUpdate( 'hudVert', module.default );
+					mat.vert = MXP.hotUpdate( 'hudVert', module.default );
 					mat.requestUpdate();
 
 				}
@@ -81,7 +81,7 @@ export class HUD extends Entity {
 
 				if ( module ) {
 
-					mat.frag = hotUpdate( 'hudFrag', module.default );
+					mat.frag = MXP.hotUpdate( 'hudFrag', module.default );
 					mat.requestUpdate();
 
 				}

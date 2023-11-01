@@ -64,15 +64,19 @@ export class Scene extends GLP.EventEmitter {
 		forwardBuffer.setDepthTexture( gBuffer.depthTexture );
 		forwardBuffer.setTexture( [ deferredBuffer.textures[ 0 ] ] );
 
+		const uiBuffer = new GLP.GLPowerFrameBuffer( gl, { disableDepthBuffer: true } );
+		uiBuffer.setTexture( [ power.createTexture() ] );
+
 		this.root.on( 'resize', ( event: MXP.EntityResizeEvent ) => {
 
 			gBuffer.setSize( event.resolution );
 			deferredBuffer.setSize( event.resolution );
 			forwardBuffer.setSize( event.resolution );
+			uiBuffer.setSize( event.resolution );
 
 		} );
 
-		this.camera = new MainCamera( { renderTarget: { gBuffer, deferredBuffer, forwardBuffer } } );
+		this.camera = new MainCamera( { renderTarget: { gBuffer, deferredBuffer, forwardBuffer, uiBuffer } } );
 		this.camera.position.set( 0, 0, 4 );
 		this.root.add( this.camera );
 

@@ -401,6 +401,7 @@ export class MainCamera extends MXP.Entity {
 			defines: {
 				"TILE": motionBlurTile,
 			},
+			renderTarget: param.renderTarget.uiBuffer
 		} );
 
 		// fxaa
@@ -558,8 +559,8 @@ export class MainCamera extends MXP.Entity {
 
 		}
 
-		this.addComponent( "postprocess", new MXP.PostProcess( {
-			input: param.renderTarget.forwardBuffer.textures,
+		const prePostProcess = this.addComponent( "prePostprocess", new MXP.PostProcess( {
+			input: param.renderTarget.deferredBuffer.textures,
 			passes: [
 				this.lightShaft,
 				this.ssr,
@@ -571,6 +572,12 @@ export class MainCamera extends MXP.Entity {
 				this.motionBlurTile,
 				this.motionBlurNeighbor,
 				this.motionBlur,
+			]
+		} ) );
+
+		this.addComponent( "postprocess", new MXP.PostProcess( {
+			input: param.renderTarget.uiBuffer.textures,
+			passes: [
 				this.fxaa,
 				this.bloomBright,
 				...this.bloomBlur,

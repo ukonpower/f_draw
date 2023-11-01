@@ -102,6 +102,7 @@ export class Entity extends GLP.EventEmitter {
 			light: [],
 			deferred: [],
 			forward: [],
+			ui: [],
 			shadowMap: [],
 			envMap: [],
 			gpuCompute: [],
@@ -162,6 +163,7 @@ export class Entity extends GLP.EventEmitter {
 			if ( material.visibilityFlag.deferred ) event.renderStack.deferred.push( this );
 			if ( material.visibilityFlag.shadowMap ) event.renderStack.shadowMap.push( this );
 			if ( material.visibilityFlag.forward ) event.renderStack.forward.push( this );
+			if ( material.visibilityFlag.ui ) event.renderStack.ui.push( this );
 			if ( material.visibilityFlag.envMap ) event.renderStack.envMap.push( this );
 
 		}
