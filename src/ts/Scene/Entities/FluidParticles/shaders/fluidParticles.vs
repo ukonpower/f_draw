@@ -14,6 +14,8 @@ uniform sampler2D uAudioWaveTex;
 uniform sampler2D uAudioFreqTex;
 uniform float uPause;
 
+uniform float uTime;
+
 out vec3 vRnd;
 
 void main( void ) {
@@ -25,10 +27,13 @@ void main( void ) {
 
 	float audioMode = uMidi.x;
 
-	float audio = texture( uAudioFreqTex, vec2( computeUV.x, 0.0 ) ).x;
-	audio = pow( audio, 1.0 );
+	float audio = texture( uAudioFreqTex, vec2( computeUV.x * 0.3, 0.0 ) ).x;
+	audio = pow( audio, 3.0 );
 
-	outPos *= rnd.x * rnd.x * 2.0 + audio * audioMode * 2.5;
+	outPos *= rnd.x * rnd.x * 5.0 + audio * audioMode * 30.5;
+
+	outPos *= 0.2 + 0.8 * (sin( length( gpuPos.xyz) * 3.0 - uTime * 5.0 ) * 0.5 + 0.5);
+	
 	outPos *= uMidi.w * uVisibility;
 	outPos *= smoothstep( 1.0, 0.1, gpuPos.w);
 	outPos *= smoothstep( 0.1, 0.15, gpuPos.w);

@@ -48,8 +48,8 @@ void main( void ) {
 
 	velocity.xyz *= 0.98;
 
-	vec3 noisePosition = position.xyz * 1.0 * ( 1.0 + position.w * 0.0);
-	float pt = id * 0.001 + t * 0.5;
+	vec3 noisePosition = position.xyz * 0.5 * ( 1.0 + position.w * 0.5);
+	float pt = id * 0.005 + t * 0.5;
 	vec3 noise = vec3(
 		snoise4D( vec4( noisePosition, pt) ),
 		snoise4D( vec4( noisePosition + 1234.5, pt) ),

@@ -15,7 +15,7 @@ void main( void ) {
 	#include <frag_in>
 
 	outColor = vec4( 1.0 );
-	outColor.xyz *= 0.0;
+	outColor.xyz *= 1.0;
 
 	outRoughness = .2;
 	outMetalic = 0.0;

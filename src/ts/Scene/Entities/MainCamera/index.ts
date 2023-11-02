@@ -1,7 +1,7 @@
 import * as GLP from 'glpower';
 import * as MXP from 'maxpower';
 
-import { gl, globalUniforms, power } from "~/ts/Globals";
+import { gl, globalUniforms, lpd8, power } from "~/ts/Globals";
 
 import fxaaFrag from './shaders/fxaa.fs';
 import bloomBlurFrag from './shaders/bloomBlur.fs';
@@ -534,6 +534,10 @@ export class MainCamera extends MXP.Entity {
 				uVignette: {
 					value: 0,
 					type: "1f"
+				},
+				uMidi: {
+					value: lpd8.vectorsLerped[ 1 ],
+					type: '4fv'
 				}
 			}, globalUniforms.audio ),
 			defines: {
@@ -559,7 +563,7 @@ export class MainCamera extends MXP.Entity {
 
 		}
 
-		const prePostProcess = this.addComponent( "prePostprocess", new MXP.PostProcess( {
+		this.addComponent( "prePostprocess", new MXP.PostProcess( {
 			input: param.renderTarget.deferredBuffer.textures,
 			passes: [
 				this.lightShaft,

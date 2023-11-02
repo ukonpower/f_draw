@@ -13,7 +13,7 @@ void main( void ) {
 	v.x = 1.0 - v.x;
 
 	float w = texture( uAudioWaveTex, v ).x - 0.5;
-	w *= uMidi.x * 2.0;
+	w *= uMidi.w * 2.0;
 	outPos.y *= abs( w ) * 20.0;
 	outPos.y += (w) * 5.0;
 	

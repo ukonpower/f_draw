@@ -7,6 +7,7 @@ uniform sampler2D uAudioWaveTex;
 uniform vec3 cameraPosition;
 uniform float cameraNear;
 uniform float cameraFar;
+uniform vec4 uMidi;
 
 in vec2 vUv;
 
@@ -26,12 +27,13 @@ vec3 filmic(vec3 x) {
 
 void main( void ) {
 
+	float audioWave = texture(uAudioWaveTex, vec2( vUv.x * 0.2, 0.0 ) ).x - 0.5;
 
 	vec3 col = vec3( 0.0, 0.0, 0.0 );
 	vec2 uv = vUv;
 	vec2 cuv = uv - 0.5;
 	float len = length(cuv);
-	float w = 0.02;
+	float w = 0.001 + audioWave * 20.0 * uMidi.x;
 
 
 	float d;
@@ -56,7 +58,7 @@ void main( void ) {
 
 	outColor = vec4( col, 1.0 );
 
-	float audioWave = texture(uAudioWaveTex, vUv ).x - 0.5;
+	outColor.xyz *= uMidi.w;
 
 	// outColor.xyz += step( length( vUv.y - 0.5 + audioWave * 0.8 ), 0.001 + abs( audioWave * 0.5 ));
 

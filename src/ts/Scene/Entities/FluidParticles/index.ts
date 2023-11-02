@@ -17,7 +17,7 @@ export class FluidParticles extends MXP.Entity {
 
 		super();
 
-		const count = new GLP.Vector( 256, 256 );
+		const count = new GLP.Vector( 128, 128 );
 
 		this.commonUniforms = GLP.UniformsUtils.merge( {
 			uMidi: {

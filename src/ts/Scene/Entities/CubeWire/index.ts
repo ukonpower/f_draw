@@ -4,7 +4,7 @@ import * as MXP from 'maxpower';
 import cubeWireVert from './shaders/cubeWire.vs';
 import cubeWireFrag from './shaders/cubeWire.fs';
 
-import { globalUniforms } from '~/ts/Globals';
+import { globalUniforms, lpd8 } from '~/ts/Globals';
 
 export class CubeWire extends MXP.Entity {
 
@@ -60,7 +60,12 @@ export class CubeWire extends MXP.Entity {
 		const mat = this.addComponent( "material", new MXP.Material( {
 			name: "cubeWire",
 			type: [ "deferred", "shadowMap" ],
-			uniforms: GLP.UniformsUtils.merge( globalUniforms.time, {} ),
+			uniforms: GLP.UniformsUtils.merge( globalUniforms.time, {
+				uMidi: {
+					value: lpd8.vectorsLerped[ 0 ],
+					type: '4fv'
+				}
+			} ),
 			vert: MXP.hotGet( 'cubeWireVert', cubeWireVert ),
 			frag: MXP.hotGet( 'cubeWireFrag', cubeWireFrag ),
 		} ) );

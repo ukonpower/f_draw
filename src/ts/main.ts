@@ -1,5 +1,5 @@
 import * as GLP from 'glpower';
-import { animator, canvas, gpuState } from './Globals';
+import { canvas, gpuState } from './Globals';
 import { Scene } from "./Scene";
 
 class App {

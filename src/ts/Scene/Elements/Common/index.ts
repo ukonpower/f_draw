@@ -5,6 +5,7 @@ import { Lights } from './Lights/inded';
 import { DustParticles } from '../../Entities/DustParticles';
 import { CubeWire } from '../../Entities/CubeWire';
 import { HUD } from '../../Entities/HUD';
+import { Grid } from '../../Entities/Grid';
 
 export class Common extends MXP.Entity {
 
@@ -24,16 +25,17 @@ export class Common extends MXP.Entity {
 		const dust = new DustParticles();
 		this.add( dust );
 
-		const wave = new AudioWave();
-		wave.scale.set( 20.0, 20.0, 20.0 );
-		this.add( wave );
+		// const wave = new AudioWave();
+		// wave.scale.set( 20.0, 20.0, 20.0 );
+		// this.add( wave );
+
+		const grid = new Grid();
+		grid.scale.set( 20, 20, 20 );
+		this.add( grid );
 
 		this.wireCube = new CubeWire();
 		this.wireCube.scale.set( 5.0, 5.0, 5.0 );
 		this.add( this.wireCube );
-
-		const hud = new HUD();
-		this.add( hud );
 
 
 	}

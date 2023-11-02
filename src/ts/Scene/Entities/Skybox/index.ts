@@ -10,7 +10,7 @@ export class Skybox extends MXP.Entity {
 
 		super();
 
-		this.addComponent( "geometry", new MXP.SphereGeometry( 50.0, 50, 50 ) );
+		this.addComponent( "geometry", new MXP.SphereGeometry( 60.0, 60, 60 ) );
 
 		const mat = this.addComponent( "material", new MXP.Material( {
 			name: "skybox",

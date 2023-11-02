@@ -1,7 +1,7 @@
 import * as GLP from 'glpower';
 import * as MXP from 'maxpower';
 
-import { animator, audio, bpm, gl, globalUniforms, midimix, mpkmini, power } from '../Globals';
+import { animator, audio, bpm, gl, globalUniforms, lpd8, midimix, mpkmini, power } from '../Globals';
 
 import { MainCamera } from './Entities/MainCamera';
 import { Renderer } from './Renderer';
@@ -120,6 +120,8 @@ export class Scene extends GLP.EventEmitter {
 		midimix.update( this.deltaTime );
 
 		mpkmini.update( this.deltaTime );
+
+		lpd8.update( this.deltaTime );
 
 		bpm.update( this.deltaTime );
 
