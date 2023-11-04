@@ -6,14 +6,18 @@ import gridCubeFrag from './shaders/gridCube.fs';
 
 import gridCubeCompute from './shaders/gridCubeCompute.glsl';
 
-import { gl, globalUniforms, midimix, mpkmini } from '~/ts/Globals';
+import { gl, globalUniforms, lpd8, midimix, mpkmini } from '~/ts/Globals';
 import { gridCubeInstance } from './instance';
+import { GridCubeCore } from './GridCubeCore';
 
 export class GridCube extends MXP.Entity {
 
 	private gpu: MXP.GPUComputePass;
 
 	private action: GLP.Vector = new GLP.Vector();
+	private tmpQuaternion: GLP.Quaternion;
+	private tmpVector: GLP.Vector;
+	private tmpEuler: GLP.Euler;
 
 	constructor() {
 
@@ -22,6 +26,9 @@ export class GridCube extends MXP.Entity {
 		const res = 16;
 
 		const count = new GLP.Vector( res * res, res );
+		this.tmpQuaternion = new GLP.Quaternion();
+		this.tmpVector = new GLP.Vector( );
+		this.tmpEuler = new GLP.Euler( 1.0, 1.0, 1.0 );
 
 		const commonUnforms: GLP.Uniforms = GLP.UniformsUtils.merge( {
 			uGrid: {
@@ -38,14 +45,20 @@ export class GridCube extends MXP.Entity {
 			},
 			uAction: {
 				value: this.action,
-				type: "2fv"
+				type: "4fv"
 			},
-		}, globalUniforms.audio, );
+		}, globalUniforms.audio, globalUniforms.time, );
 
-		midimix.on( "row2/0", () => {
+		lpd8.on( "pad2/1", ( value: number ) => {
 
 			this.action.x = ( this.action.x + 1 ) % 3;
-			this.action.y = 1;
+			this.action.y += value;
+
+		} );
+
+		lpd8.on( "pad2/0", ( value: number ) => {
+
+			this.action.z = value;
 
 		} );
 
@@ -58,7 +71,7 @@ export class GridCube extends MXP.Entity {
 			size: count,
 			layerCnt: 2,
 			frag: MXP.hotGet( "paraCompute", gridCubeCompute ),
-			uniforms: GLP.UniformsUtils.merge( globalUniforms.time, commonUnforms ),
+			uniforms: GLP.UniformsUtils.merge( commonUnforms ),
 		} );
 
 		this.gpu.initTexture( ( l, x, y ) => {
@@ -149,11 +162,22 @@ export class GridCube extends MXP.Entity {
 
 		}
 
+		/*-------------------------------
+			Core
+		-------------------------------*/
+
+		const core = new GridCubeCore( commonUnforms );
+		this.add( core );
+
 	}
 
 	protected updateImpl( event: MXP.EntityUpdateEvent ): void {
 
 		this.action.y *= 0.8;
+		this.action.z *= 0.95;
+
+		this.tmpQuaternion.setFromEuler( this.tmpVector.copy( this.tmpEuler ).multiply( this.action.y ) );
+
 
 	}
 

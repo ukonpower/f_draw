@@ -26,8 +26,6 @@ void main( void ) {
 	float audio = texture( uAudioFreqTex, vec2(0.1, 0.0 ) ).x;
 	audio = smoothstep( 0.2, 0.8, audio );
 
-	float audioMode = uMidi.x;
-
 	float id = vUv.x + vUv.y * uGPUResolution.x;
 
 	vec4 position = texture( gpuSampler0, vUv );
@@ -56,7 +54,7 @@ void main( void ) {
 		snoise4D( vec4( noisePosition + 2345.6, pt) )
 	) * 0.003;
 
-	velocity.xyz += noise * mix( 1.0, audio * 1.5, audioMode ) * (uMidi.y * 2.0);
+	velocity.xyz += noise * (0.5 + audio * 0.8) * (uMidi.x * 2.0);
 
 	float dir = atan2( position.z, position.x );
 	// velocity.x += sin( dir ) * 0.001;

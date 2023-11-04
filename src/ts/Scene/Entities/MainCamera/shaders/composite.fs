@@ -8,6 +8,7 @@ uniform vec3 cameraPosition;
 uniform float cameraNear;
 uniform float cameraFar;
 uniform vec4 uMidi;
+uniform vec4 uMidiMaster;
 
 in vec2 vUv;
 
@@ -27,7 +28,7 @@ vec3 filmic(vec3 x) {
 
 void main( void ) {
 
-	float audioWave = texture(uAudioWaveTex, vec2( vUv.x * 0.2, 0.0 ) ).x - 0.5;
+	float audioWave = texture(uAudioWaveTex, vec2( vUv.x * 0.15, 0.0 ) ).x - 0.5;
 
 	vec3 col = vec3( 0.0, 0.0, 0.0 );
 	vec2 uv = vUv;
@@ -58,7 +59,7 @@ void main( void ) {
 
 	outColor = vec4( col, 1.0 );
 
-	outColor.xyz *= uMidi.w;
+	outColor.xyz *= uMidiMaster.x;
 
 	// outColor.xyz += step( length( vUv.y - 0.5 + audioWave * 0.8 ), 0.001 + abs( audioWave * 0.5 ));
 

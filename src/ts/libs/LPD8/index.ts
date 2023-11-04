@@ -98,9 +98,6 @@ export class LPD8 extends GLP.EventEmitter {
 		const id = e.data[ 1 ];
 		const value = e.data[ 2 ] / 127;
 
-		console.log( type, id, value );
-
-
 		// value
 
 		if ( type == 176 && ( 70 <= id && id <= 77 ) ) {

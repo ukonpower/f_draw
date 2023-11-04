@@ -17,7 +17,7 @@ uniform float uGrid;
 uniform float uGridInv;
 
 uniform float uTime;
-uniform vec2 uAction;
+uniform vec4 uAction;
 
 in vec2 vUv;
 
@@ -98,12 +98,34 @@ void main( void ) {
 		audio = texture( uAudioFreqTex, vec2( rnd.x, 0.0 ) ).x;
 		audio = pow( audio, 1.0 ) * 1.0;
 
+	} else if( uAction.x == 2.0 ) {
+
+		vec3 pos = vec3( 0.0 );
+
+		pos.x = sin( vUv.x * TPI + uTime );
+		pos.y = cos( vUv.x * TPI + uTime );
+		pos.z = (vUv.y - 0.5) * 3.0;
+		pos.xy *= sin( vUv.y* PI );
+
+		goalPos = pos;
+		dir = normalize( pos );
+
+		audio = texture( uAudioFreqTex, vec2( vUv.y - 0.5, 0.0 ) ).x;
+		audio = pow( audio, 1.0 ) * 1.0;
+
 	}
+
+	// goalPos.xy *= rotate( uAction.z * 10.0 );
+	goalPos *= 1.0 + uAction.z;
+	goalPos *= 1.0 + snoise4D( vec4( goalPos * 2.0, uTime ) ) * uAction.z * 5.0;
+
 
 	velocity *= 0.5;
 	velocity.xyz += dir * audio * uMidi.w;
 	velocity.xyz += (goalPos - position.xyz) * (0.4);
 	position.xyz += velocity.xyz;
+
+
 
 	position.xyz += (fbm3( position.xyz + uAction.x ) - 0.5) * uAction.y;
 	position.w = 1.0;

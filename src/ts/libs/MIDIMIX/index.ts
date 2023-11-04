@@ -37,6 +37,11 @@ export class MIDIMIX extends GLP.EventEmitter {
 
 		}
 
+		// master
+
+		this.vectors.push( new GLP.Vector() );
+		this.vectorsLerped.push( new GLP.Vector() );
+
 		// midi
 
 		navigator.requestMIDIAccess().then( ( m ) => {
@@ -138,6 +143,13 @@ export class MIDIMIX extends GLP.EventEmitter {
 			this.emit( "vector/" + index + '/' + dim, [ value ] );
 
 			return;
+
+		}
+
+		// master
+		if ( type == 176 && id == 62 ) {
+
+			this.vectors[ this.vectors.length - 1 ].x = value;
 
 		}
 

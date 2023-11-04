@@ -20,7 +20,7 @@ export class Grid extends MXP.Entity {
 		const posArray: number[] = [];
 		const rotArray: number[] = [];
 
-		const num = 10;
+		const num = 11;
 
 		for ( let i = 0; i < num; i ++ ) {
 

@@ -1,7 +1,7 @@
 import * as GLP from 'glpower';
 import * as MXP from 'maxpower';
 
-import { gl, globalUniforms, lpd8, power } from "~/ts/Globals";
+import { gl, globalUniforms, lpd8, midimix, power } from "~/ts/Globals";
 
 import fxaaFrag from './shaders/fxaa.fs';
 import bloomBlurFrag from './shaders/bloomBlur.fs';
@@ -537,6 +537,10 @@ export class MainCamera extends MXP.Entity {
 				},
 				uMidi: {
 					value: lpd8.vectorsLerped[ 1 ],
+					type: '4fv'
+				},
+				uMidiMaster: {
+					value: midimix.vectorsLerped[ 8 ],
 					type: '4fv'
 				}
 			}, globalUniforms.audio ),

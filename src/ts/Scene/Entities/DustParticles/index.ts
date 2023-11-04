@@ -1,12 +1,15 @@
 import * as GLP from 'glpower';
 import * as MXP from 'maxpower';
 
-import { gl, globalUniforms } from '~/ts/Globals';
+import { gl, globalUniforms, lpd8 } from '~/ts/Globals';
 
 import dustParticlesVert from './shaders/dustParticles.vs';
 import dustParticlesFrag from './shaders/dustParticles.fs';
 
 export class DustParticles extends MXP.Entity {
+
+	private action: GLP.Vector = new GLP.Vector();
+
 
 	constructor() {
 
@@ -49,6 +52,25 @@ export class DustParticles extends MXP.Entity {
 			drawType: gl.POINTS
 		} ) );
 
+		lpd8.on( "pad2/0", ( value: number ) => {
+
+			this.action.x = value;
+
+		} );
+
+		lpd8.on( "pad2/1", ( value: number ) => {
+
+			this.action.y = value;
+
+		} );
+
+
+		lpd8.on( "pad2/2", ( value: number ) => {
+
+			this.action.z = ( this.action.z + 1 ) % 3;
+
+		} );
+
 		if ( import.meta.hot ) {
 
 			import.meta.hot.accept( [ "./shaders/dustParticles.vs", "./shaders/dustParticles.fs" ], ( module ) => {
@@ -70,6 +92,14 @@ export class DustParticles extends MXP.Entity {
 			} );
 
 		}
+
+	}
+
+	protected updateImpl( event: MXP.EntityUpdateEvent ): void {
+
+		this.action.x *= 0.8;
+		this.action.y *= 0.95;
+
 
 	}
 

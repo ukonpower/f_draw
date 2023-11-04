@@ -29,7 +29,7 @@ void main( void ) {
 
 	outColor += vec4( texture( uShadingBuffer, vUv ).xyz, 1.0 );
 	outColor += texture( uSSRTexture, vUv ) * 0.3 * f;
-	outColor *= max( 0.0, 1.0 - texture( uSSAOTexture, vUv ).x * 2.0 );
+	outColor *= max( 0.0, 1.0 - texture( uSSAOTexture, vUv ).x * 4.0 );
 	outColor += texture( uLightShaftTexture, vUv ) * 0.15;
 
 }
