@@ -24,7 +24,7 @@ void main( void ) {
 	
 	outColor.xyz =  vec3( 1.0 );
 
-	outEmission += vec3( 0.0, 2.0, 0.0 ) * smoothstep( 0.9, 1.0, vId.y) * (uMidi2.w);
+	outEmission += vec3( 0.0, 2.0, 0.0 ) * smoothstep( 0.9, 1.0, vId.y) * (uMidi2.x);
 	outRoughness *= 0.1;
 
 	#include <frag_out>

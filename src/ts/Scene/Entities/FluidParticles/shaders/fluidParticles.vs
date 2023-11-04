@@ -17,6 +17,7 @@ uniform float uPause;
 uniform float uTime;
 
 out vec3 vRnd;
+out float vAudio;
 
 void main( void ) {
 
@@ -37,10 +38,10 @@ void main( void ) {
 	outPos *= smoothstep( 0.1, 0.15, gpuPos.w);
 	outPos += gpuPos.xyz;
 	
-	if( uMidi.z > 0.001 ) {
+	if( uMidi.y > 0.001 ) {
 
-		// float m = (1.0 - pow( 1.0 - uMidi.z, 1.0 ) );
-		float m = uMidi.z;
+		// float m = (1.0 - pow( 1.0 - uMidi.y, 1.0 ) );
+		float m = uMidi.y;
 
 		// m *= sin( length( outPos ) * 2.0 - uTime * 2.0 ) * 0.5 + 0.5;
 		m *= snoise4D( vec4( outPos * 0.5, uTime * 0.2 ) ) * 0.5 + 0.5;
@@ -63,5 +64,7 @@ void main( void ) {
 	
 	vec4 vel = ( projectionMatrix * viewMatrix * modelMatrix * vec4( gpuVel.xyz, 0.0 ) );
 	vVelocity += vel.xy * 0.1 * ( 1.0 - uPause );
+
+	vAudio = audio;
 	
 }

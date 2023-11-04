@@ -15,8 +15,12 @@ in vec2 vUv;
 #include <rotate>
 
 uniform vec4 uMidi;
+uniform vec4 uMidi2;
 
 void main( void ) {
+
+	float around = uMidi2.w;
+	float aroundInv = 1.0 - around;
 
 	float id = ( vUv.x * uGPUResolution.x + vUv.y ) / uGPUResolution.x;
 	vec2 pixel = 1.0 / uGPUResolution;
@@ -28,7 +32,7 @@ void main( void ) {
 
 	float bara = id * (  10.0 * uMidi.x);
 	float t = uTime * mix( 0.1, 1.0, head );
-	vec3 noisePosition = position.xyz * mix( 2.0 * uMidi.y, 0.15 + bara, head);
+	vec3 noisePosition = position.xyz * mix( 2.0 * uMidi.y, 0.15 + bara, head) * ( 1.0 - around * 0.5);
 
 	vec3 noise = vec3(
 		snoise4D( vec4( noisePosition, t) ),
@@ -43,16 +47,16 @@ void main( void ) {
 		velocity.xyz *= 0.99;
 		velocity.xyz += noise * 0.003; 
 
-		float r = (1.0) * 0.0004;
 
 		float dir = atan2( position.z, position.x );
-		// velocity.x += sin( dir ) * r;
-		// velocity.z += -cos( dir ) * r;
+		float r = 0.001 * around;
+		velocity.x += sin( dir ) * r;
+		velocity.z += -cos( dir ) * r;
 
 		vec3 gravity = vec3( 0.0 );
 		vec3 gPos = vec3( 0.0 );
 		gPos = position.xyz + vec3( 0.0, 0.0, 0.0 );
-		gravity += gPos.xyz * smoothstep( 0.0, 3.1, length( gPos.xyz ) ) * -vec3(0.001);
+		gravity += gPos.xyz * smoothstep( 0.0, 3.1, length( gPos.xyz ) * ( 1.0 - around * 0.97) ) * -vec3(0.001);
 		velocity.xyz += gravity;
 
 		if( length( velocity.xyz ) > 0.15 ) {
