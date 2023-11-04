@@ -1,13 +1,18 @@
 import * as MXP from 'maxpower';
 import { Part } from '..';
-import { Trails } from '~/ts/Scene/Entities/Trails';
+import { FinalCube } from '~/ts/Scene/Entities/FinalCube';
 
 export class Part3 extends Part {
+
+	private finalCube: FinalCube;
 
 	constructor() {
 
 		super( 3 );
 
+		this.finalCube = new FinalCube();
+		this.finalCube.scale.set( 10.0, 10.0, 10.0 );
+		this.add( this.finalCube );
 
 	}
 
@@ -15,6 +20,7 @@ export class Part3 extends Part {
 
 		super.updateImpl( event );
 
+		this.finalCube.visiblity = this.switcher.visibility;
 
 	}
 

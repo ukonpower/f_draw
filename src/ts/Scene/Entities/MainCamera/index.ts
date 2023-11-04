@@ -536,18 +536,36 @@ export class MainCamera extends MXP.Entity {
 					type: "1f"
 				},
 				uMidi: {
+					value: midimix.vectorsLerped[ 5 ],
+					type: '4fv'
+				},
+				uMidi2: {
 					value: lpd8.vectorsLerped[ 1 ],
 					type: '4fv'
 				},
 				uMidiMaster: {
 					value: midimix.vectorsLerped[ 8 ],
 					type: '4fv'
+				},
+				uTitleTex: {
+					value: new GLP.GLPowerTexture( gl ).load( "/ttl.png" ),
+					type: '1i'
+				},
+				uTitleVis: {
+					value: 0.0,
+					type: '1f'
 				}
 			}, globalUniforms.audio ),
 			defines: {
 				BLOOM_COUNT: this.bloomRenderCount.toString()
 			},
 			renderTarget: null
+		} );
+
+		midimix.on( 'row1/5', ( ) =>{
+
+			this.composite.uniforms.uTitleVis.value = 1.0 - this.composite.uniforms.uTitleVis.value;
+
 		} );
 
 		if ( import.meta.hot ) {

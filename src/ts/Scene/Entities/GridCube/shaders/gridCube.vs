@@ -62,7 +62,6 @@ void main( void ) {
 
 	vGpuPos = gpuPos;
 	vGpuVel = gpuVel;
-
 	
 	vec4 vel = ( projectionMatrix * viewMatrix * modelMatrix * vec4( gpuVel.xyz, 0.0 ) );
 	vVelocity += vel.xy * 0.5;

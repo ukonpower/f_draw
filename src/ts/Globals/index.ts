@@ -64,10 +64,10 @@ export const globalUniforms: {[key: string]: GLP.Uniforms} = {
 -------------------------------*/
 
 import { GPUState } from '../libs/GPUState';
-export let gpuState: GPUState | undefined = undefined;
+export const gpuState: GPUState | undefined = undefined;
 
 import 'webgl-memory';
 import { BPM } from '../libs/BPM';
 import { MPKMini } from '../libs/MPKMini';
 import { LPD8 } from '../libs/LPD8';
-gpuState = new GPUState();
+// gpuState = new GPUState();

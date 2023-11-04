@@ -139,6 +139,22 @@ export class LPD8 extends GLP.EventEmitter {
 
 		if ( type == 153 && ( 36 <= id && id <= 39 ) ) {
 
+			if ( id == 39 ) {
+
+				console.log( id );
+
+
+				if ( this.output ) {
+
+					this.output.send( [ 0x90, id, 127 ] );
+
+
+				}
+
+				return;
+
+			}
+
 			const index = id - 36;
 
 			this.emit( "pad2", [ index, value ] );

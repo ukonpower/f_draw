@@ -128,6 +128,24 @@ export class GLPowerTexture {
 
 	}
 
+	public load( src: string, callBack?: () => void ) {
+
+		const img = new Image();
+
+		img.onload = () => {
+
+			this.attach( img );
+
+			if ( callBack ) callBack();
+
+		};
+
+		img.src = src;
+
+		return this;
+
+	}
+
 	public getTexture() {
 
 		return this.texture;

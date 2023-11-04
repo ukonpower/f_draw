@@ -3,12 +3,15 @@
 uniform sampler2D backbuffer0;
 uniform sampler2D uBloomTexture[4];
 uniform sampler2D uAudioWaveTex;
+uniform sampler2D uTitleTex;
 
 uniform vec3 cameraPosition;
 uniform float cameraNear;
 uniform float cameraFar;
 uniform vec4 uMidi;
+uniform vec4 uMidi2;
 uniform vec4 uMidiMaster;
+uniform float uTitleVis;
 
 in vec2 vUv;
 
@@ -34,7 +37,7 @@ void main( void ) {
 	vec2 uv = vUv;
 	vec2 cuv = uv - 0.5;
 	float len = length(cuv);
-	float w = 0.001 + audioWave * 20.0 * uMidi.x;
+	float w = 0.001 + audioWave * 20.0 * uMidi2.x;
 
 
 	float d;
@@ -53,14 +56,14 @@ void main( void ) {
 		col += texture( uBloomTexture[ LOOP_INDEX ], uv ).xyz * ( 0.5 + float(LOOP_INDEX) * 0.5 ) * 0.2;
 	#pragma loop_end
 
-	// col = pow( col, vec3( 1.2 ) );
-
 	col *= smoothstep( 1.0, 0.4, len );
 
 	outColor = vec4( col, 1.0 );
 
+	outColor *= 1.0 - (uMidi.z * uMidi.w);
+	
+	vec4 ttl = texture( uTitleTex, vUv );
+	outColor.xyz = mix( outColor.xyz, vec3( 1.0 ), ttl.w * uMidi.w * uTitleVis );
+
 	outColor.xyz *= uMidiMaster.x;
-
-	// outColor.xyz += step( length( vUv.y - 0.5 + audioWave * 0.8 ), 0.001 + abs( audioWave * 0.5 ));
-
 }

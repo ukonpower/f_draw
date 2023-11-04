@@ -11,7 +11,7 @@ export class MIDIMIX extends GLP.EventEmitter {
 	public vectorsLerped: GLP.Vector[];
 
 	public row1: number[];
-	public row2: number;
+	public row2: number[];
 
 	constructor() {
 
@@ -26,7 +26,7 @@ export class MIDIMIX extends GLP.EventEmitter {
 		this.output = null;
 
 		this.row1 = [];
-		this.row2 = 0;
+		this.row2 = [];
 
 		for ( let i = 0; i < 8; i ++ ) {
 
@@ -34,6 +34,7 @@ export class MIDIMIX extends GLP.EventEmitter {
 			this.vectorsLerped.push( new GLP.Vector() );
 
 			this.row1.push( 0 );
+			this.row2.push( 0 );
 
 		}
 
@@ -198,7 +199,7 @@ export class MIDIMIX extends GLP.EventEmitter {
 
 	public pushRow2( index: number ) {
 
-		this.row2 = index;
+		this.row2[ index ] = 1.0 - this.row2[ index ];
 
 		this.emit( "row2", [ this.row2 ] );
 		this.emit( "row2/" + index, [ this.row2 ] );
@@ -228,11 +229,9 @@ export class MIDIMIX extends GLP.EventEmitter {
 
 		for ( let i = 0; i < 8; i ++ ) {
 
-			this.output.send( [ 0x90, 3 + i * 3, 0 ] );
+			this.output.send( [ 0x90, 3 + i * 3, this.row2[ i ] * 127 ] );
 
 		}
-
-		this.output.send( [ 0x90, ( this.row2 + 1 ) * 3.0, 127 ] );
 
 	}
 

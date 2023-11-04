@@ -208,7 +208,7 @@ export class CameraControls extends MXP.Component {
 				Math.cos( selfRadian ) * selfRadius,
 				Math.random() - 0.5,
 				Math.sin( selfRadian ) * selfRadius,
-			), 0.1 );
+			).multiply( w ), 0.1 );
 
 			const targetRadius = Math.random() * w * 0.4;
 			const targetRadian = Math.random() * Math.PI * 2.0;
