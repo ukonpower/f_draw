@@ -60,7 +60,7 @@ void main( void ) {
 
 	outColor = vec4( col, 1.0 );
 
-	outColor *= 1.0 - (uMidi.z * uMidi.w);
+	outColor.xyz *= 1.0 - (uMidi.z * uMidi.w);
 	
 	vec4 ttl = texture( uTitleTex, vUv );
 	outColor.xyz = mix( outColor.xyz, vec3( 1.0 ), ttl.w * uMidi.w * uTitleVis );
