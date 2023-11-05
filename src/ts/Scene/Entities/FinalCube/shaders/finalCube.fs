@@ -111,6 +111,12 @@ void main( void ) {
 		vec4 mv = viewMatrix * vec4(outPos, 1.0);
 	#endif
 
+
+	#ifdef IS_DEPTH
+		float depth_z = (-mv.z - cameraNear) / (cameraFar - cameraNear);
+		outColor0 = vec4(floatToRGBA( depth_z ));
+	#endif
+
 	#ifdef IS_DEFERRED
 		vec4 mvp = projectionMatrix * mv;
 		gl_FragDepth = ( mvp.z / mvp.w ) * 0.5 + 0.5;

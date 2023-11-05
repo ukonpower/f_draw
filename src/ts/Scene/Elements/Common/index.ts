@@ -1,10 +1,9 @@
 import * as MXP from 'maxpower';
 import { Skybox } from '../../Entities/Skybox';
 import { AudioWave } from '../../Entities/AudioWave';
-import { Lights } from './Lights/inded';
+import { Lights } from './Lights';
 import { DustParticles } from '../../Entities/DustParticles';
 import { CubeWire } from '../../Entities/CubeWire';
-import { HUD } from '../../Entities/HUD';
 import { Grid } from '../../Entities/Grid';
 
 export class Common extends MXP.Entity {

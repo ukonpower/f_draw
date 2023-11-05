@@ -1,5 +1,6 @@
 import * as GLP from 'glpower';
 import * as MXP from 'maxpower';
+import { LightControls } from '~/ts/Scene/Components/LightControls';
 
 export class Lights extends MXP.Entity {
 
@@ -18,6 +19,8 @@ export class Lights extends MXP.Entity {
 		} ) );
 		light.quaternion.setFromEuler( new GLP.Euler( - Math.PI / 8, 0.0, 0.0 ) );
 
+		// light.addComponent( "lcon", new LightControls() );
+
 		this.add( light );
 
 		const light2 = new MXP.Entity();
@@ -32,6 +35,12 @@ export class Lights extends MXP.Entity {
 		light2.quaternion.setFromEuler( new GLP.Euler( Math.PI / 4, Math.PI / 4, 0.0 ) );
 		this.add( light2 );
 
+		// light2.addComponent( "lcon", new LightControls() );
+
 	}
+
+
+
+
 
 }
