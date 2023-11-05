@@ -29,7 +29,7 @@ vec2 D( vec3 p ) {
 	pp.xz *= rotate( vInv * 2.0 );
 	pp.yz *= rotate( vInv * 5.0 );
 
-	vec3 boxSize = vec3( 0.01 + uMidi.y, 0.1 * uMidi.x, 0.01 + uMidi.y ) * uVisibility * uMidi.w * 2.0;
+	vec3 boxSize = vec3( 0.01 + uMidi.y * 0.1, 0.1 * uMidi.x, 0.01 + uMidi.y * 0.1 ) * uVisibility * uMidi.w * 2.0;
 
 	for( int i = 0; i < 8; i++ ) {
 

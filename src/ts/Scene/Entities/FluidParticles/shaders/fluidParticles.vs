@@ -63,7 +63,7 @@ void main( void ) {
 	vRnd = rnd;
 	
 	vec4 vel = ( projectionMatrix * viewMatrix * modelMatrix * vec4( gpuVel.xyz, 0.0 ) );
-	vVelocity += vel.xy * 0.1 * ( 1.0 - uPause );
+	vVelocity += vel.xy * 0.08 * ( 1.0 - uPause );
 
 	vAudio = audio;
 	
