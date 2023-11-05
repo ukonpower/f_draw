@@ -20,7 +20,7 @@ vec2 D( vec3 p ) {
 
 	vec2 d = vec2( 99999.0, 0.0 );
 
-	float t = uTime * 0.5;
+	float t = uTime * 0.25;
 	
 	float rot = floor( t ) + ( 1.0 - exp( fract( t ) * - 5.0 ));
 	float rot2 = floor( t * 0.5 ) + ( 1.0 - exp( fract( t * 0.5 ) * - 20.0 ));
